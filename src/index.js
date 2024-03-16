@@ -155,6 +155,11 @@ const domElementManipulation = () => {
     });
   };
 
+//   const createForm = () => {
+//     let newForm = document.createElement('form');
+//     content.appendChild(newForm);
+//   }
+
   return {
     renderProjectCard,
     appendCardFromArray,
@@ -193,6 +198,8 @@ createNewCard(myItem3, "myItem3");
 createNewCard(myItem4, "myItem4");
 createNewCard(myItem5, "myItem5");
 createNewCard(myItem6, "myItem6");
+goDom.createForm();
+
 
 // goDom.createCardBoilerplate("myCard");
 // goDom.appendCardFromArray("myCard", container.array[0]);

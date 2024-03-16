@@ -10,6 +10,31 @@
       <h1>To do list</h1>
       <button>Add item</button>
     </header>
+    <form action="none" method="push">
+      <label for="title">Enter Task Name</label>
+      <input id="title" type="text" name="title" required />
+
+      <label for="taskDesc">What needs to be done?</label>
+      <input id="taskDesc" type="text" name="taskDesc" required />
+
+      <legend for="choiceOne">What is the task priority?</legend>
+      <div>
+        <label for="choiceOne">Low</label>
+        <input id="choiceOne" type="radio" name="prioStatus" value="0" />
+
+        <label for="choiceTwo">Medium</label>
+        <input id="choiceTwo" type="radio" name="prioStatus" value="0" />
+
+        <label for="choiceThree">High</label>
+        <input id="choiceThree" type="radio" name="prioStatus" value="0" />
+      </div>
+      <label for="taskDate">When is the task due?</label>
+      <input id="taskDate" type="date" name="taskDate" required />
+
+      <button type="submit" id="submitForm">Submit now</button>
+      <button type="button" id="resetForm">Clear form</button>
+    </form>
+
     <div class="content"></div>
     <footer></footer>
   </body>
