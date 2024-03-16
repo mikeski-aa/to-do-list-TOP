@@ -78,28 +78,48 @@ const domElementManipulation = () => {
   };
 
   // creates a div inside div with additional functionality to create a paragraph within subsequent div
-  const createNewDivInsideDiv = (targetDiv, newDivClass, targetOfTarget) => {
+  const createNewDivInsideDiv = (
+    targetDiv,
+    newDivClass,
+    targetOfTarget,
+    type
+  ) => {
+    let newDiv;
     if (targetOfTarget !== undefined) {
       let target = document.querySelector(`.${targetDiv}`);
       let targetOT = target.querySelector(`.${targetOfTarget}`);
-      let newDiv = document.createElement("p");
+      
+
+      newDiv = document.createElement("p");
       newDiv.classList.add(newDivClass || "default");
       targetOT.appendChild(newDiv);
     } else {
       let target = document.querySelector(`.${targetDiv}`);
-      let newDiv = document.createElement("div");
+      if (type == undefined) {
+        newDiv = document.createElement("div");
+      } else if (type === "h1") {
+        newDiv = document.createElement("h1");
+      }
+
       newDiv.classList.add(newDivClass || "default");
 
       target.appendChild(newDiv);
     }
   };
-
+  // creates a project card
   const renderProjectCard = (projectName) => {
     createNewDiv(projectName);
-    createNewBtn(projectName, "Open Project");
-    createNewBtn(projectName, "Delete Project");
+    createNewDivInsideDiv(projectName, "projectTitle", undefined, 'h1');
+    createNewDivInsideDiv(projectName, "firstItem");
+    createNewDivInsideDiv(projectName, "secondItem");
+    createNewDivInsideDiv(projectName, "thirdItem");
+    createNewDivInsideDiv(projectName, "fourthItem");
+    createNewDivInsideDiv(projectName, "fithItem");
+    createNewBtn(projectName, "OpenProject");
+    createNewBtn(projectName, "DeleteProject");
   };
 
+  // creates an empty boilerplate card to be filled with user values
   const createCardBoilerplate = (toDoName) => {
     createNewDiv(toDoName);
     createNewDivInsideDiv(toDoName, "title");
@@ -116,7 +136,7 @@ const domElementManipulation = () => {
     createNewBtn(toDoName, "Done");
     createNewBtn(toDoName, "Delete");
   };
-
+  // creates new to-do card using data from stored object within the container.array array
   const appendCardFromArray = (targetCard, sourceObject) => {
     let target = document.querySelector(`.${targetCard}`);
     let title = target.querySelector(".title");
@@ -153,7 +173,7 @@ const domElementManipulation = () => {
       console.log(container.array);
     });
   };
-
+  // enables task status toggle on card and within array
   const taskStatus = (target, sourceObject) => {
     let btn = target.querySelector(".Done");
     btn.addEventListener("click", (e) => {
@@ -166,7 +186,7 @@ const domElementManipulation = () => {
       }
     });
   };
-
+  // toggle form visibility - form is invisible with height 0 by default
   const toggleFormVisibility = () => {
     let form = document.querySelector("form");
     let addBtn = document.querySelector(".add");
@@ -183,7 +203,13 @@ const domElementManipulation = () => {
     });
   };
 
+  const changeTitle = (newTitle) => {
+    let title = document.querySelector("h1");
+    title.textContent = newTitle;
+  };
+
   return {
+    changeTitle,
     renderProjectCard,
     toggleFormVisibility,
     createNewBtn,
@@ -275,44 +301,36 @@ function formReset(
   formToDoPrioMed.checked = false;
   formToDoPrioHigh.checked = false;
 }
+function renderHomePage() {
+  goDom.changeTitle("Your active projects");
+  goDom.createNewBtn("header", "NewProject");
+  goDom.renderProjectCard("project1");
+}
+function renderToDoPage() {
+  let myItem = createNewTodo("Wash", "Wash car", "today", "medium");
+  let myItem2 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
 
-function renderProjectPage() {
-    let myItem = createNewTodo("Wash", "Wash car", "today", "medium");
-    let myItem2 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
-    
-goDom.createNewBtn("header", "home");
-goDom.createNewBtn("header", "add");
-createNewCard(myItem, "myItem");
-createNewCard(myItem2, "myItem2");
+  goDom.createNewBtn("header", "home");
+  goDom.createNewBtn("header", "add");
+  createNewCard(myItem, "myItem");
+  createNewCard(myItem2, "myItem2");
 
-formSub;
-goDom.toggleFormVisibility();
+  formSub;
+  goDom.toggleFormVisibility();
 }
 
 let container = toDoProject();
 let goDom = domElementManipulation();
 let formSub = formSubmit();
 
-
-renderProjectPage();
-
-
-
-
-
-
-
-
-
-
+renderHomePage();
+// renderToDoPage();
 // console testing stuff
 
 // let myItem3 = createNewTodo("Wash", "Wash car", "today", "medium");
 // let myItem4 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
 // let myItem5 = createNewTodo("Wash", "Wash car", "today", "medium");
 // let myItem6 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
-
-
 
 // container.toDoContainer(myItem);
 // container.toDoContainer(myItem2);
@@ -322,8 +340,6 @@ renderProjectPage();
 // createNewCard(myItem4, "myItem4");
 // createNewCard(myItem5, "myItem5");
 // createNewCard(myItem6, "myItem6");
-
-
 
 // goDom.createCardBoilerplate("myCard");
 // goDom.appendCardFromArray("myCard", container.array[0]);
