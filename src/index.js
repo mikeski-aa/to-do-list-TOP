@@ -43,6 +43,36 @@ const toDoProject = () => {
   };
 };
 
+//dom manipulation to be done here
+const domElementManipulation = () => {
+    const content = document.querySelector('.content');
+
+    const createProjectDiv = (projectName) => {
+        let newDiv = document.createElement('div');
+        newDiv.classList.add(projectName || 'default');
+        content.appendChild(newDiv);
+    }
+
+    const createProjectCardBtn = (targetAppend, btnTxt) => {
+        let target = document.querySelector(`.${targetAppend}`);
+        let btn = document.createElement('button');
+        btn.textContent = btnTxt;
+
+        target.appendChild(btn);
+
+    }
+
+    const renderProjectCard = (projectName) => {
+        createProjectDiv(projectName);
+        createProjectCardBtn(projectName, 'Open Project');
+        createProjectCardBtn(projectName, 'Delete Project');
+    }
+
+    return {
+        renderProjectCard
+    }
+}
+
 
 // console testing stuff
 let myItem = createNewTodo("Wash", "Was car", "today", "medium");
@@ -54,3 +84,8 @@ let container = toDoProject();
 container.toDoContainer(myItem);
 container.toDoContainer(myItem2);
 console.log(container.array);
+
+let goDom = domElementManipulation();
+goDom.renderProjectCard('project1');
+goDom.renderProjectCard('project2');
+goDom.renderProjectCard('project3');

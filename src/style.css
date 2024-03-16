@@ -1,3 +1,10 @@
 body {
     background-color: grey;
 }
+
+.content>div {
+    height: 150px;
+    width: 150px;
+    background: white;
+    border: 2px solid black;
+}
