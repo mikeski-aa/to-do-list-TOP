@@ -155,16 +155,56 @@ const domElementManipulation = () => {
     });
   };
 
-//   const createForm = () => {
-//     let newForm = document.createElement('form');
-//     content.appendChild(newForm);
-//   }
-
   return {
     renderProjectCard,
     appendCardFromArray,
     createCardBoilerplate,
   };
+};
+
+// submit form logic
+const formSubmit = () => {
+  let submit = document.querySelector("#submitForm");
+  let reset = document.querySelector('#resetForm')
+  let formToDoTitle = document.querySelector("#title");
+  let formToDoDesc = document.querySelector("#taskDesc");
+  let formToDoDate = document.querySelector("#taskDate");
+  let formToDoPrioLow = document.querySelector("#prioLow");
+  let formToDoPrioMed = document.querySelector("#prioMed");
+  let formToDoPrioHigh = document.querySelector("#prioHigh");
+  let formToDoPrio;
+  // counter is arbitrary but required to keep cards from overriding each other
+  let counter = 0;
+
+  submit.addEventListener("click", (event) => {
+    console.log("test");
+    event.preventDefault();
+
+    if (formToDoPrioLow === 1) {
+      formToDoPrio = "LOW";
+    } else if (formToDoPrioMed === 1) {
+      formToDoPrio = "MED";
+    } else {
+      formToDoPrio = "HIGH";
+    }
+
+    let newItem = createNewTodo(
+      formToDoTitle.value,
+      formToDoDesc.value,
+      formToDoDate.value,
+      formToDoPrio
+    );
+
+    createNewCard(newItem, `NewCard${counter}`);
+    counter++;
+    formReset(formToDoDate, formToDoTitle, formToDoDesc, formToDoPrioLow, formToDoPrioMed, formToDoPrioHigh);
+  });
+
+  reset.addEventListener("click", () => {
+    console.log('Test');
+    formReset(formToDoDate, formToDoTitle, formToDoDesc, formToDoPrioLow, formToDoPrioMed, formToDoPrioHigh);
+  })
+  return counter;
 };
 
 // function for adding new items to array and creating cards easily
@@ -173,6 +213,16 @@ function createNewCard(contItem, cardName) {
   container.toDoContainer(contItem);
   goDom.createCardBoilerplate(cardName);
   goDom.appendCardFromArray(cardName, container.array[arrLength]);
+}
+
+//function to reset form 
+function formReset(formToDoDate, formToDoTitle, formToDoDesc, formToDoPrioLow, formToDoPrioMed, formToDoPrioHigh){
+    formToDoDate.value = null;
+    formToDoTitle.value = '';
+    formToDoDesc.value = '';
+    formToDoPrioLow.checked = false;
+    formToDoPrioMed.checked = false;
+    formToDoPrioHigh.checked = false;
 }
 
 // console testing stuff
@@ -194,12 +244,13 @@ console.log(container.array);
 let goDom = domElementManipulation();
 createNewCard(myItem, "myItem");
 createNewCard(myItem2, "myItem2");
-createNewCard(myItem3, "myItem3");
-createNewCard(myItem4, "myItem4");
-createNewCard(myItem5, "myItem5");
-createNewCard(myItem6, "myItem6");
-goDom.createForm();
+// createNewCard(myItem3, "myItem3");
+// createNewCard(myItem4, "myItem4");
+// createNewCard(myItem5, "myItem5");
+// createNewCard(myItem6, "myItem6");
 
+let formSub = formSubmit();
+formSub;
 
 // goDom.createCardBoilerplate("myCard");
 // goDom.appendCardFromArray("myCard", container.array[0]);

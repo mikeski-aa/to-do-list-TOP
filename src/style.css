@@ -7,4 +7,9 @@ body {
     width: 250px;
     background: white;
     border: 2px solid black;
+    display: grid;
+}
+
+form {
+    display: grid;
 }
