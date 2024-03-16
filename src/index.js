@@ -47,13 +47,13 @@ const toDoProject = () => {
 const domElementManipulation = () => {
     const content = document.querySelector('.content');
 
-    const createProjectDiv = (projectName) => {
+    const createNewDiv = (divName) => {
         let newDiv = document.createElement('div');
-        newDiv.classList.add(projectName || 'default');
+        newDiv.classList.add(divName || 'default');
         content.appendChild(newDiv);
     }
 
-    const createProjectCardBtn = (targetAppend, btnTxt) => {
+    const createNewBtn = (targetAppend, btnTxt) => {
         let target = document.querySelector(`.${targetAppend}`);
         let btn = document.createElement('button');
         btn.textContent = btnTxt;
@@ -62,14 +62,50 @@ const domElementManipulation = () => {
 
     }
 
+    const createNewDivInsideDiv = (targetDiv, newDivClass) => {
+        let target = document.querySelector(`.${targetDiv}`)
+        let newDiv = document.createElement('div');
+        newDiv.classList.add(newDivClass || 'default');
+
+        target.appendChild(newDiv);
+    }
+
     const renderProjectCard = (projectName) => {
-        createProjectDiv(projectName);
-        createProjectCardBtn(projectName, 'Open Project');
-        createProjectCardBtn(projectName, 'Delete Project');
+        createNewDiv(projectName);
+        createNewBtn(projectName, 'Open Project');
+        createNewBtn(projectName, 'Delete Project');
+    }
+
+    const renderToDoCard = (toDoName) => {
+        createNewDiv(toDoName);
+        createNewDivInsideDiv(toDoName, 'title');
+        createNewDivInsideDiv(toDoName, 'description');
+        createNewDivInsideDiv(toDoName, 'priority');
+        createNewDivInsideDiv(toDoName, 'date');
+        createNewBtn(toDoName, 'Done');
+        createNewBtn(toDoName, 'Delete');
+
+
+    }
+
+    const appendCardFromArray = (targetCard, sourceObject) => {
+        let target = document.querySelector(`.${targetCard}`);
+        let title = target.querySelector('.title');
+        let desc = target.querySelector('.description');
+        let prio = target.querySelector('.priority');
+        let date = target.querySelector('.date');
+   
+        title.textContent = sourceObject.toDoTitle;
+        desc.textContent = sourceObject.toDoDetails;
+        prio.textContent = sourceObject.toDoPrio;
+        date.textContent = sourceObject.toDoDueDate;
+
     }
 
     return {
-        renderProjectCard
+        renderProjectCard,
+        appendCardFromArray,
+        renderToDoCard
     }
 }
 
@@ -83,9 +119,13 @@ myItem2.print();
 let container = toDoProject();
 container.toDoContainer(myItem);
 container.toDoContainer(myItem2);
-console.log(container.array);
+console.log(container.array[0].toDoTitle);
 
 let goDom = domElementManipulation();
-goDom.renderProjectCard('project1');
-goDom.renderProjectCard('project2');
-goDom.renderProjectCard('project3');
+goDom.renderToDoCard('myCard');
+goDom.appendCardFromArray('myCard', container.array[0]);
+goDom.renderToDoCard('myCard2');
+goDom.appendCardFromArray('myCard2', container.array[1]);
+// goDom.renderProjectCard('project1');
+// goDom.renderProjectCard('project2');
+// goDom.renderProjectCard('project3');
