@@ -65,12 +65,21 @@ const domElementManipulation = () => {
     target.appendChild(btn);
   };
 
-  const createNewDivInsideDiv = (targetDiv, newDivClass) => {
-    let target = document.querySelector(`.${targetDiv}`);
-    let newDiv = document.createElement("div");
-    newDiv.classList.add(newDivClass || "default");
+  // creates a div inside div with additional functionality to create a paragraph within subsequent div
+  const createNewDivInsideDiv = (targetDiv, newDivClass, targetOfTarget) => {
+    if (targetOfTarget !== undefined) {
+      let target = document.querySelector(`.${targetDiv}`);
+      let targetOT = target.querySelector(`.${targetOfTarget}`);
+      let newDiv = document.createElement("p");
+      newDiv.classList.add(newDivClass || "default");
+      targetOT.appendChild(newDiv);
+    } else {
+      let target = document.querySelector(`.${targetDiv}`);
+      let newDiv = document.createElement("div");
+      newDiv.classList.add(newDivClass || "default");
 
-    target.appendChild(newDiv);
+      target.appendChild(newDiv);
+    }
   };
 
   const renderProjectCard = (projectName) => {
@@ -82,8 +91,15 @@ const domElementManipulation = () => {
   const createCardBoilerplate = (toDoName) => {
     createNewDiv(toDoName);
     createNewDivInsideDiv(toDoName, "title");
+
     createNewDivInsideDiv(toDoName, "description");
+    createNewDivInsideDiv(toDoName, "descTemp", "description");
+    createNewDivInsideDiv(toDoName, "descVal", "description");
+
     createNewDivInsideDiv(toDoName, "priority");
+    createNewDivInsideDiv(toDoName, "prioTemp", "priority");
+    createNewDivInsideDiv(toDoName, "prioVal", "priority");
+
     createNewDivInsideDiv(toDoName, "date");
     createNewBtn(toDoName, "Done");
     createNewBtn(toDoName, "Delete");
@@ -95,10 +111,19 @@ const domElementManipulation = () => {
     let desc = target.querySelector(".description");
     let prio = target.querySelector(".priority");
     let date = target.querySelector(".date");
+    let descTitle = desc.querySelector(".descTemp");
+    let descCont = desc.querySelector(".descVal");
+    let prioTitle = prio.querySelector(".prioTemp");
+    let prioCont = prio.querySelector(".prioVal");
 
     title.textContent = "Title: " + sourceObject.toDoTitle;
-    desc.textContent = "Details: " + sourceObject.toDoDetails;
-    prio.textContent = "Priority: " + sourceObject.toDoPrio;
+
+    descTitle.textContent = "Details: ";
+    descCont.textContent = sourceObject.toDoDetails;
+
+    prioTitle.textContent = "Priority: ";
+    prioCont.textContent = sourceObject.toDoPrio;
+
     date.textContent = "Due date: " + sourceObject.toDoDueDate;
     removeCard(target, sourceObject);
     taskStatus(target, sourceObject);
@@ -106,33 +131,29 @@ const domElementManipulation = () => {
 
   // removes click target from visible card (deletes dom object) and from array
   const removeCard = (target, sourceObject) => {
-    let btn = target.querySelector('.Delete');
-    btn.addEventListener('click', (e) => {
-        
-        console.log(btn.closest('div'));
-        let child = btn.closest('div');
-        content.removeChild(child);
-        console.log(container.array.indexOf(sourceObject));
-        container.array.splice(container.array.indexOf(sourceObject), 1);
-        console.log(container.array);
- 
-    })
+    let btn = target.querySelector(".Delete");
+    btn.addEventListener("click", (e) => {
+      console.log(btn.closest("div"));
+      let child = btn.closest("div");
+      content.removeChild(child);
+      console.log(container.array.indexOf(sourceObject));
+      container.array.splice(container.array.indexOf(sourceObject), 1);
+      console.log(container.array);
+    });
   };
 
   const taskStatus = (target, sourceObject) => {
-    let btn = target.querySelector('.Done');
-    btn.addEventListener('click', (e) => {
-        if (sourceObject.toDoCompleted === true) {
-            sourceObject.toDoCompleted = false;
-            console.log(sourceObject.toDoCompleted);
-        } else {
-            sourceObject.toDoCompleted = true;
-            console.log(sourceObject.toDoCompleted);
-        }
-        
- 
-    })
-  }
+    let btn = target.querySelector(".Done");
+    btn.addEventListener("click", (e) => {
+      if (sourceObject.toDoCompleted === true) {
+        sourceObject.toDoCompleted = false;
+        console.log(sourceObject.toDoCompleted);
+      } else {
+        sourceObject.toDoCompleted = true;
+        console.log(sourceObject.toDoCompleted);
+      }
+    });
+  };
 
   return {
     renderProjectCard,
@@ -141,25 +162,43 @@ const domElementManipulation = () => {
   };
 };
 
+// function for adding new items to array and creating cards easily
+function createNewCard(contItem, cardName) {
+  let arrLength = container.array.length;
+  container.toDoContainer(contItem);
+  goDom.createCardBoilerplate(cardName);
+  goDom.appendCardFromArray(cardName, container.array[arrLength]);
+}
 
 // console testing stuff
-let myItem = createNewTodo("Wash", "Was car", "today", "medium");
+let myItem = createNewTodo("Wash", "Wash car", "today", "medium");
 let myItem2 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
+let myItem3 = createNewTodo("Wash", "Wash car", "today", "medium");
+let myItem4 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
+let myItem5 = createNewTodo("Wash", "Wash car", "today", "medium");
+let myItem6 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
 myItem.print();
 myItem2.print();
 
 let container = toDoProject();
 
-container.toDoContainer(myItem);
-container.toDoContainer(myItem2);
+// container.toDoContainer(myItem);
+// container.toDoContainer(myItem2);
 console.log(container.array);
 
 let goDom = domElementManipulation();
+createNewCard(myItem, "myItem");
+createNewCard(myItem2, "myItem2");
+createNewCard(myItem3, "myItem3");
+createNewCard(myItem4, "myItem4");
+createNewCard(myItem5, "myItem5");
+createNewCard(myItem6, "myItem6");
 
-goDom.createCardBoilerplate("myCard");
-goDom.appendCardFromArray("myCard", container.array[0]);
-goDom.createCardBoilerplate("myCard2");
-goDom.appendCardFromArray("myCard2", container.array[1]);
+// goDom.createCardBoilerplate("myCard");
+// goDom.appendCardFromArray("myCard", container.array[0]);
+// goDom.createCardBoilerplate("myCard2");
+// goDom.appendCardFromArray("myCard2", container.array[1]);
+
 // goDom.renderProjectCard('project1');
 // goDom.renderProjectCard('project2');
 // goDom.renderProjectCard('project3');
