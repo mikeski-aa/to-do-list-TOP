@@ -12,4 +12,6 @@ body {
 
 form {
     display: grid;
+    visibility: hidden;
+    height: 0;
 }

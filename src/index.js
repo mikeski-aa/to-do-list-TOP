@@ -57,10 +57,22 @@ const domElementManipulation = () => {
   };
 
   const createNewBtn = (targetAppend, btnTxt) => {
-    let target = document.querySelector(`.${targetAppend}`);
+    let target;
+
+    if (targetAppend == "header") {
+      console.log("working");
+      target = document.querySelector(targetAppend);
+    } else {
+      target = document.querySelector(`.${targetAppend}`);
+    }
+
     let btn = document.createElement("button");
     btn.classList.add(`${btnTxt}`);
-    btn.textContent = btnTxt;
+    if (btnTxt == "add") {
+      btn.textContent = "Add a new To Do item!";
+    } else {
+      btn.textContent = btnTxt;
+    }
 
     target.appendChild(btn);
   };
@@ -155,8 +167,26 @@ const domElementManipulation = () => {
     });
   };
 
+  const toggleFormVisibility = () => {
+    let form = document.querySelector("form");
+    let addBtn = document.querySelector(".add");
+    addBtn.addEventListener("click", () => {
+      if (form.style.visibility === "visible") {
+        form.style.visibility = "hidden";
+        form.style.height = "0";
+        addBtn.textContent = "Add a new To Do item!";
+      } else {
+        form.style.visibility = "visible";
+        form.style.height = "100%";
+        addBtn.textContent = "Click to hide form!";
+      }
+    });
+  };
+
   return {
     renderProjectCard,
+    toggleFormVisibility,
+    createNewBtn,
     appendCardFromArray,
     createCardBoilerplate,
   };
@@ -165,7 +195,7 @@ const domElementManipulation = () => {
 // submit form logic
 const formSubmit = () => {
   let submit = document.querySelector("#submitForm");
-  let reset = document.querySelector('#resetForm')
+  let reset = document.querySelector("#resetForm");
   let formToDoTitle = document.querySelector("#title");
   let formToDoDesc = document.querySelector("#taskDesc");
   let formToDoDate = document.querySelector("#taskDate");
@@ -197,13 +227,27 @@ const formSubmit = () => {
 
     createNewCard(newItem, `NewCard${counter}`);
     counter++;
-    formReset(formToDoDate, formToDoTitle, formToDoDesc, formToDoPrioLow, formToDoPrioMed, formToDoPrioHigh);
+    formReset(
+      formToDoDate,
+      formToDoTitle,
+      formToDoDesc,
+      formToDoPrioLow,
+      formToDoPrioMed,
+      formToDoPrioHigh
+    );
   });
 
   reset.addEventListener("click", () => {
-    console.log('Test');
-    formReset(formToDoDate, formToDoTitle, formToDoDesc, formToDoPrioLow, formToDoPrioMed, formToDoPrioHigh);
-  })
+    console.log("Test");
+    formReset(
+      formToDoDate,
+      formToDoTitle,
+      formToDoDesc,
+      formToDoPrioLow,
+      formToDoPrioMed,
+      formToDoPrioHigh
+    );
+  });
   return counter;
 };
 
@@ -215,42 +259,71 @@ function createNewCard(contItem, cardName) {
   goDom.appendCardFromArray(cardName, container.array[arrLength]);
 }
 
-//function to reset form 
-function formReset(formToDoDate, formToDoTitle, formToDoDesc, formToDoPrioLow, formToDoPrioMed, formToDoPrioHigh){
-    formToDoDate.value = null;
-    formToDoTitle.value = '';
-    formToDoDesc.value = '';
-    formToDoPrioLow.checked = false;
-    formToDoPrioMed.checked = false;
-    formToDoPrioHigh.checked = false;
+//function to reset form
+function formReset(
+  formToDoDate,
+  formToDoTitle,
+  formToDoDesc,
+  formToDoPrioLow,
+  formToDoPrioMed,
+  formToDoPrioHigh
+) {
+  formToDoDate.value = null;
+  formToDoTitle.value = "";
+  formToDoDesc.value = "";
+  formToDoPrioLow.checked = false;
+  formToDoPrioMed.checked = false;
+  formToDoPrioHigh.checked = false;
 }
 
-// console testing stuff
-let myItem = createNewTodo("Wash", "Wash car", "today", "medium");
-let myItem2 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
-let myItem3 = createNewTodo("Wash", "Wash car", "today", "medium");
-let myItem4 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
-let myItem5 = createNewTodo("Wash", "Wash car", "today", "medium");
-let myItem6 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
-myItem.print();
-myItem2.print();
+function renderProjectPage() {
+    let myItem = createNewTodo("Wash", "Wash car", "today", "medium");
+    let myItem2 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
+    
+goDom.createNewBtn("header", "home");
+goDom.createNewBtn("header", "add");
+createNewCard(myItem, "myItem");
+createNewCard(myItem2, "myItem2");
+
+formSub;
+goDom.toggleFormVisibility();
+}
 
 let container = toDoProject();
+let goDom = domElementManipulation();
+let formSub = formSubmit();
+
+
+renderProjectPage();
+
+
+
+
+
+
+
+
+
+
+// console testing stuff
+
+// let myItem3 = createNewTodo("Wash", "Wash car", "today", "medium");
+// let myItem4 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
+// let myItem5 = createNewTodo("Wash", "Wash car", "today", "medium");
+// let myItem6 = createNewTodo("Clean", "Clean room", "tomorrow", "high");
+
+
 
 // container.toDoContainer(myItem);
 // container.toDoContainer(myItem2);
-console.log(container.array);
 
-let goDom = domElementManipulation();
-createNewCard(myItem, "myItem");
-createNewCard(myItem2, "myItem2");
+// best;
 // createNewCard(myItem3, "myItem3");
 // createNewCard(myItem4, "myItem4");
 // createNewCard(myItem5, "myItem5");
 // createNewCard(myItem6, "myItem6");
 
-let formSub = formSubmit();
-formSub;
+
 
 // goDom.createCardBoilerplate("myCard");
 // goDom.appendCardFromArray("myCard", container.array[0]);
@@ -260,3 +333,11 @@ formSub;
 // goDom.renderProjectCard('project1');
 // goDom.renderProjectCard('project2');
 // goDom.renderProjectCard('project3');
+// const createNewBtn = (targetAppend, btnTxt) => {
+//     let target = document.querySelector(`.${targetAppend}`);
+//     let btn = document.createElement("button");
+//     btn.classList.add(`${btnTxt}`);
+//     btn.textContent = btnTxt;
+
+//     target.appendChild(btn);
+//   };
