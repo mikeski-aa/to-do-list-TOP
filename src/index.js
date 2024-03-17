@@ -64,11 +64,12 @@ function createContentContainer() {
   body.appendChild(newContainer);
 }
 
-//dom manipulation to be done here
+//dom manipulation to be done here ---------------------------------------------------------
 const domElementManipulation = () => {
   let content = document.querySelector(".content");
 
   const createNewDiv = (divName) => {
+    let content = document.querySelector(".content");
     let newDiv = document.createElement("div");
     newDiv.classList.add(divName);
     content.appendChild(newDiv);
@@ -123,6 +124,7 @@ const domElementManipulation = () => {
       target.appendChild(newDiv);
     }
   };
+
   // creates an empty project card boilerplate
   const createProjectCardBoilerplate = (projectName) => {
     createNewDiv(projectName);
@@ -139,10 +141,14 @@ const domElementManipulation = () => {
     let projectTitle = target.querySelector(".projectTitle");
     let firstItem = target.querySelector(".firstItem");
     projectTitle.textContent = sourceObject.projectTitle;
-    firstItem.textContent =
-      sourceContainer.array[0].toDoTitle +
-      " , " +
-      sourceContainer.array[0].toDoDueDate;
+
+    // prevents errors when project is empty and you go back 
+    if (container.array.length !== 0) {
+      firstItem.textContent =
+        sourceContainer.array[0].toDoTitle +
+        " , " +
+        sourceContainer.array[0].toDoDueDate;
+    }
   };
 
   // creates an empty boilerplate card to be filled with user values
@@ -189,6 +195,7 @@ const domElementManipulation = () => {
 
   // removes click target from visible card (deletes dom object) and from array
   const removeCard = (target, sourceObject) => {
+    let content = document.querySelector(".content");
     let btn = target.querySelector(".Delete");
     btn.addEventListener("click", (e) => {
       console.log(btn.closest("div"));
@@ -234,12 +241,30 @@ const domElementManipulation = () => {
     title.textContent = newTitle;
   };
 
+// this function renders all cards from the container array
+// in the future i need to add functionality for switching between arrays otherwise only first project will work correctly.
+
+  const renderToDoCards = () => {
+    let noOfCards = container.array.length;
+    console.log(noOfCards);
+    let renderCounter = 0;
+
+    for (let i = 0; i < noOfCards; i++) {
+      goDom.createCardBoilerplate(`NewCard${renderCounter}`);
+      goDom.appendCardFromArray(`NewCard${renderCounter}`, container.array[i]);
+      renderCounter++;
+    }
+  };
+
   return {
+    renderToDoCards,
     appendProjectCard,
     changeTitle,
     createProjectCardBoilerplate,
     toggleFormVisibility,
     createNewBtn,
+    createNewDiv,
+    createNewDivInsideDiv,
     appendCardFromArray,
     createCardBoilerplate,
   };
@@ -256,8 +281,8 @@ const formSubmit = () => {
   let formToDoPrioMed = document.querySelector("#prioMed");
   let formToDoPrioHigh = document.querySelector("#prioHigh");
   let formToDoPrio;
-  // counter is arbitrary but required to keep cards from overriding each other
-  let counter = 0;
+  // counter is required to prevent new to do items for overriding existing elements
+  let counter = container.array.length + 1;
 
   submit.addEventListener("click", (event) => {
     console.log("test");
@@ -277,7 +302,8 @@ const formSubmit = () => {
       formToDoDate.value,
       formToDoPrio
     );
-
+    console.log(`NewCard${counter}`);
+    console.log(newItem);
     createNewCard(newItem, `NewCard${counter}`);
     counter++;
     formReset(
@@ -355,20 +381,24 @@ function formReset(
   formToDoPrioHigh.checked = false;
 }
 // creates a content container for where all cards should live
-createContentContainer();
 
 // need to include this or nothing works
 let container = toDoObjects();
 let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
 let formSub = formSubmit();
+let myItem3 = createNewTodo("Wash", "Wash car", "today", "MEDIUM");
+container.toDoContainer(myItem3);
+console.log(myItem3);
+console.log(container.array[0]);
+console.log(myItem3 === container.array[0]);
 
 // renders the home page
 function renderHomePage() {
+  createContentContainer();
   goDom.changeTitle("Your active projects");
   goDom.createNewBtn("header", "NewProject");
-  let myItem3 = createNewTodo("Wash", "Wash car", "today", "MEDIUM");
-  container.toDoContainer(myItem3);
+
   let myProject = createNewProject("Sample", "Task");
   createNewProjectCard(myProject, "myProj");
 }
@@ -376,32 +406,50 @@ function renderHomePage() {
 /// renders the to do page
 function renderToDoPage() {
   goDom.changeTitle("To Do List");
-  let myItem = createNewTodo("Wash", "Wash car", "today", "MEDIUM");
-  let myItem2 = createNewTodo("Clean", "Clean room", "tomorrow", "HIGH");
+  createContentContainer();
+  // let myItem = createNewTodo("Wash", "Wash car", "today", "MEDIUM");
+  // let myItem2 = createNewTodo("Clean", "Clean room", "tomorrow", "HIGH");
 
   goDom.createNewBtn("header", "home");
   goDom.createNewBtn("header", "add");
   console.log(container);
-  createNewCard(myItem, "myItem");
-  createNewCard(myItem2, "myItem2");
+  // createNewCard(myItem, "myItem");
+  // createNewCard(myItem2, "myItem2");
 
+  goDom.renderToDoCards();
   formSub;
   goDom.toggleFormVisibility();
 }
 
-renderHomePage();
-// renderToDoPage();
-
+// renderHomePage();
+renderToDoPage();
+addList2();
 // testing changing pages
-let openTest = document.querySelector(".OpenProject");
-openTest.addEventListener("click", () => {
-  console.log("iwork");
-  delCont();
-  container.array.pop();
-  console.log(container);
-  createContentContainer();
-  renderToDoPage();
-});
+
+function addList2() {
+  let home = document.querySelector(".home");
+  home.addEventListener("click", () => {
+    let title = document.querySelector("h1");
+    if (title !== "Your active projects") {
+      delContTd();
+      console.log(container);
+      renderHomePage();
+      addList();
+      console.log(container.array);
+    } else return;
+  });
+}
+
+function addList() {
+  let openTest = document.querySelector(".OpenProject");
+  openTest.addEventListener("click", () => {
+    console.log("iwork");
+    delCont();
+    console.log(container);
+    renderToDoPage();
+    addList2();
+  });
+}
 
 // //function to delete current container
 function delCont() {
@@ -414,4 +462,18 @@ function delCont() {
   header.removeChild(childbutton);
 }
 
-// renderToDoPage();
+// //function to delete to do content container
+function delContTd() {
+  let body = document.querySelector("body");
+  let child = document.querySelector(".content");
+  let header = document.querySelector("header");
+  let childbutton = document.querySelector(".home");
+  let addchildbutton = document.querySelector(".add");
+  let form = document.querySelector("form");
+  form.style.visibility = "hidden";
+  form.style.height = "0";
+
+  body.removeChild(child);
+  header.removeChild(childbutton);
+  header.removeChild(addchildbutton);
+}
