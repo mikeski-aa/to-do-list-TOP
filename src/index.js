@@ -392,9 +392,11 @@ const formSubmit = (container) => {
 const addNewProjectCard = () => {
   goDom.createNewBtn("header", "NewProject");
   let counterP = projectContainer.array.length;
+  
 
   let btn = document.querySelector(".NewProject");
   btn.addEventListener("click", () => {
+    console.log(`counter is at `+counterP);
     let newProject = prompt("Enter the new project name");
     let newProjectItem = createNewProject(newProject, counterP);
 
@@ -509,12 +511,15 @@ function renderHomePage() {
 let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
 let newHolder = holder();
+let container = toDoObjects();
+let formSub = formSubmit(container);
+formSub;
 
 /// renders the to do page
 function renderToDoPage() {
-  let container = toDoObjects();
+
  
-  let formSub = formSubmit(container);
+  
   console.log(`keep testing this shit ` + container);
   goDom.changeTitle("To Do List");
   createContentContainer();
@@ -524,7 +529,7 @@ function renderToDoPage() {
   console.log(container);
 
   goDom.renderToDoCards(container);
-  formSub;
+ 
   goDom.toggleFormVisibility();
   backToMainMenu();
 }
