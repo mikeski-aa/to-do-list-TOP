@@ -137,11 +137,22 @@ const domElementManipulation = () => {
   };
 
   // remove project button
-  const removeProjectCard = (targetCard) => {
+  const removeProjectCard = (targetCard, sourceObject) => {
     let btn = targetCard.querySelector('.DeleteProject');
+    let content = document.querySelector('.content');
+
     btn.addEventListener('click', (e) => {
       console.log(btn.closest('div'));
+      let child = btn.closest('div');
+      content.removeChild(child);
+      console.log(projectContainer.array);
+      projectContainer.array.splice(projectContainer.array.indexOf(sourceObject), 1);
+      console.log(projectContainer.array);
     })
+  }
+
+  const testingButton = (target) => {
+    console.log(`SDFKDJASDKLASDJKLASDJKASDJKL TARGET THING IS ${target}`)
   }
 
   // append project card
@@ -159,7 +170,7 @@ const domElementManipulation = () => {
         sourceContainer.array[0].toDoDueDate;
     };
 
-    // removeProjectCard(projectName);
+    removeProjectCard(target, sourceObject);
   };
 
   // creates an empty boilerplate card to be filled with user values
