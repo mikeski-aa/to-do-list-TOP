@@ -149,11 +149,17 @@ const domElementManipulation = () => {
       projectContainer.array.splice(projectContainer.array.indexOf(sourceObject), 1);
       console.log(projectContainer.array);
     })
+  };
+
+  // open project button
+  const openProjectCard = (targetCard, sourceObject) => {
+    let openTest = targetCard.querySelector(".OpenProject");
+    openTest.addEventListener('click', () => {
+      delCont();
+      renderToDoPage();
+    })
   }
 
-  const testingButton = (target) => {
-    console.log(`SDFKDJASDKLASDJKLASDJKASDJKL TARGET THING IS ${target}`)
-  }
 
   // append project card
   const appendProjectCard = (targetCard, sourceObject, sourceContainer) => {
@@ -170,6 +176,7 @@ const domElementManipulation = () => {
         sourceContainer.array[0].toDoDueDate;
     };
 
+    openProjectCard(target, sourceObject);
     removeProjectCard(target, sourceObject);
   };
 
@@ -386,7 +393,7 @@ const addNewProjectCard = () => {
     createNewProjectCard(newProjectItem, `NewProj${counterP}`);
     counterP++;
   });
-  addList();
+  // addList();
   return counterP;
 };
 
@@ -477,10 +484,11 @@ function renderToDoPage() {
   goDom.renderToDoCards();
   formSub;
   goDom.toggleFormVisibility();
+  addList2();
 }
 
 renderHomePage();
-addList();
+// addList();
 console.log(projectContainer.array.length);
 // renderToDoPage();
 // addList2();
@@ -495,25 +503,25 @@ function addList2() {
       delContTd();
       console.log(container);
       renderHomePage();
-      addList();
+      // addList();
       console.log(container.array);
     } else return;
   });
 }
 
-function addList() {
-  let openTest = document.querySelector(".OpenProject");
-  if (openTest === null) {
-    return;
-  }
-  openTest.addEventListener("click", () => {
-    console.log("iwork");
-    delCont();
-    console.log(container);
-    renderToDoPage();
-    addList2();
-  });
-}
+// function addList() {
+//   let openTest = document.querySelector(".OpenProject");
+//   if (openTest === null) {
+//     return;
+//   }
+//   openTest.addEventListener("click", () => {
+//     console.log("iwork");
+//     delCont();
+//     console.log(container);
+//     renderToDoPage();
+//     addList2();
+//   });
+// }
 
 // //function to delete current container
 function delCont() {
