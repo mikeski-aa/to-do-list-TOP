@@ -29,12 +29,13 @@ const createNewTodo = (title, details, dueDate, prio) => {
 
 // holder for created to dos within a project
 const holder = (id, toDoItems) => {
-  const holderID = id;
-  const holderItems = toDoItems;
+  const objectID = id;
+  const objectItem = toDoItems;
 
   return {
-    id,
-    toDoItems,
+  
+    objectID,
+    objectItem
   };
 };
 
@@ -171,13 +172,23 @@ const domElementManipulation = () => {
       delCont();
       alert(sourceObject.id)
       alert(sourceObject.firstOpen);
+      console.log(testHolder.get(sourceObject.id))
 
-      renderToDoPage(sourceObject.id);
+      if (testHolder.has(sourceObject.id) === false) {alert('nothing mapped yet')} else {
+        // let container = testHolder.get(sourceObject.id);
+        // renderToDoPage(sourceObject.id, container);
+        
+      }
+
+      renderToDoPage(sourceObject.id, testHolder.get(sourceObject.id));
 
       // renderToDoPage(sourceObject.id);
       // console.log(`231232322 tempID object is: --`+tempID)
+      return;
     });
   };
+
+
 
   // append project card
   const appendProjectCard = (targetCard, sourceObject, sourceContainer) => {
@@ -329,6 +340,11 @@ const domElementManipulation = () => {
     createCardBoilerplate,
   };
 };
+  //experiment with a function to create new project names
+
+  function newProjectName(){
+  
+  }
 
 // submit form logic
 const formSubmit = (container) => {
@@ -399,7 +415,7 @@ const addNewProjectCard = () => {
     console.log(`counter is at `+counterP);
     let newProject = prompt("Enter the new project name");
     let newProjectItem = createNewProject(newProject, counterP);
-
+  
     createNewProjectCard(newProjectItem, `NewProj${counterP}`);
     counterP++;
   });
@@ -481,23 +497,40 @@ function delCont() {
 }
 
 // takes back to main menu, clears pervious page
-function backToMainMenu(currentID, projectID) {
+function backToMainMenu(sourceObjectID, container) {
   let home = document.querySelector(".home");
   home.addEventListener("click", () => {
     let title = document.querySelector("h1");
     if (title !== "Your active projects") {
+      console.log(`source project id is `+sourceObjectID);
+   
+      testHolder.delete(sourceObjectID);
+      testHolder.set(sourceObjectID, container);
+      console.log(container.array);
+      console.log(sourceObjectID.array);
+      console.log(testHolder);
+      console.log(testHolder.get(sourceObjectID));
+      // holderArr.push(testArr);
       delContTd();
 
-      renderHomePage();
+      renderHomePage(sourceObjectID);
+      console.log(testArr);
+      
+      // console.log(holderArr);
+      return (sourceObjectID.array);
     } else return;
   });
 }
 
 // renders the home page
-function renderHomePage() {
+function renderHomePage(sourceObjectID) {
+
   goDom.changeTitle("Your active projects");
   createContentContainer();
-
+  console.log(sourceObjectID);
+  let arr = [];
+  arr.push(sourceObjectID);
+  console.log(arr);
   // goDom.createNewBtn("header", "NewProject");
   checkIfProjectsExist();
   let test = addNewProjectCard();
@@ -510,28 +543,44 @@ function renderHomePage() {
 
 let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
-let newHolder = holder();
-let container = toDoObjects();
-let formSub = formSubmit(container);
-formSub;
+let newHolder = holder(25, 'this');
+// let container = toDoObjects(); 
+// let formSub = formSubmit(container); 
+const testHolder = new Map();
+// console.log(newHolder);
+// console.log(newHolder.objectID);
+// console.log(newHolder.objectItem);
+// let newerHolder = holder(2, 'that');
+let testArr = [];
+let holderArr = [];
+console.log(holderArr.length);
+
+// testArr.push(newHolder);
+// console.log(testArr);
+// testArr.push(newerHolder);
+// console.log(testArr);
+
+// console.log('at array 0 the id is '+testArr[0].objectID);
+
 
 /// renders the to do page
-function renderToDoPage() {
-
- 
-  
+function renderToDoPage(sourceObjectID, holderInput) {
+  let newContID = sourceObjectID;
+  newContID = toDoObjects();
+  let container = newContID;
+  if (holderInput !== undefined) {container = holderInput}
+  let formSub = formSubmit(container); 
   console.log(`keep testing this shit ` + container);
   goDom.changeTitle("To Do List");
   createContentContainer();
 
   goDom.createNewBtn("header", "home");
   goDom.createNewBtn("header", "add");
-  console.log(container);
 
   goDom.renderToDoCards(container);
  
   goDom.toggleFormVisibility();
-  backToMainMenu();
+  backToMainMenu(sourceObjectID, container);
 }
 
 renderHomePage();
