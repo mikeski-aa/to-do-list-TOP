@@ -33,9 +33,8 @@ const holder = (id, toDoItems) => {
   const objectItem = toDoItems;
 
   return {
-  
     objectID,
-    objectItem
+    objectItem,
   };
 };
 
@@ -61,10 +60,6 @@ const toDoObjects = () => {
 
   function toDoContainer(myItem) {
     array.push(myItem);
-
-    return {
-      array,
-    };
   }
 
   return {
@@ -113,37 +108,52 @@ const domElementManipulation = () => {
   };
 
   // creates a div inside div with additional functionality to create a paragraph within subsequent div
-  const createNewDivInsideDiv = (
-    targetDiv,
-    newDivClass,
-    targetOfTarget,
-    type
-  ) => {
-    let newDiv;
+  const createNewDivInsideDiv = (targetDiv, newDivClass) => {
     let target = document.querySelector(`.${targetDiv}`);
-    if (targetOfTarget !== undefined) {
-      let targetOT = target.querySelector(`.${targetOfTarget}`);
+    let newDiv = document.createElement("div");
+    newDiv.classList.add(newDivClass);
+    target.appendChild(newDiv);
 
-      newDiv = document.createElement("p");
-      newDiv.classList.add(newDivClass || "default");
-      targetOT.appendChild(newDiv);
-    } else {
-      if (type == undefined) {
-        newDiv = document.createElement("div");
-      } else if (type === "h3") {
-        newDiv = document.createElement("h3");
-      }
+    // let newDiv;
+    // let target = document.querySelector(`.${targetDiv}`);
+    // if (targetOfTarget !== undefined) {
+    //   let targetOT = target.querySelector(`.${targetOfTarget}`);
 
-      newDiv.classList.add(newDivClass || "default");
+    //   newDiv = document.createElement("p");
+    //   newDiv.classList.add(newDivClass || "default");
+    //   targetOT.appendChild(newDiv);
+    // } else {
+    //   if (type == undefined) {
+    //     newDiv = document.createElement("div");
+    //   } else if (type === "h3") {
+    //     newDiv = document.createElement("h3");
+    //   }
 
-      target.appendChild(newDiv);
-    }
+    //   newDiv.classList.add(newDivClass || "default");
+
+    //   target.appendChild(newDiv);
+  };
+  // this should create new paragraph inside div
+  const createNewParaInsideDiv = (targetDiv, newDivClass) => {
+    let target = document.querySelector(`.${targetDiv}`);
+    let newP = document.createElement("p");
+    newP.classList.add(newDivClass);
+    target.appendChild(newP);
+  };
+
+  //this should create new div inside new div
+  const createNewTitleInsideDiv = (targetDiv, newDivClass) => {
+    let target = document.querySelector(`.${targetDiv}`);
+    let newDiv = document.createElement("h3");
+    newDiv.classList.add(newDivClass);
+    target.appendChild(newDiv);
   };
 
   // creates an empty project card boilerplate
   const createProjectCardBoilerplate = (projectName) => {
     createNewDiv(projectName);
-    createNewDivInsideDiv(projectName, "projectTitle", undefined, "h3");
+
+    createNewTitleInsideDiv(projectName, "projectTitle");
     createNewDivInsideDiv(projectName, "firstItem");
 
     createNewBtn(projectName, "OpenProject");
@@ -170,14 +180,15 @@ const domElementManipulation = () => {
     let openTest = targetCard.querySelector(".OpenProject");
     openTest.addEventListener("click", () => {
       delCont();
-      alert(sourceObject.id)
+      alert(sourceObject.id);
       alert(sourceObject.firstOpen);
-      console.log(testHolder.get(sourceObject.id))
+      console.log(testHolder.get(sourceObject.id));
 
-      if (testHolder.has(sourceObject.id) === false) {alert('nothing mapped yet')} else {
+      if (testHolder.has(sourceObject.id) === false) {
+        alert("nothing mapped yet");
+      } else {
         // let container = testHolder.get(sourceObject.id);
         // renderToDoPage(sourceObject.id, container);
-        
       }
 
       renderToDoPage(sourceObject.id, testHolder.get(sourceObject.id));
@@ -187,8 +198,6 @@ const domElementManipulation = () => {
       return;
     });
   };
-
-
 
   // append project card
   const appendProjectCard = (targetCard, sourceObject, sourceContainer) => {
@@ -211,18 +220,25 @@ const domElementManipulation = () => {
 
   // creates an empty boilerplate card to be filled with user values
   const createCardBoilerplate = (toDoName) => {
-    createNewDiv(toDoName);
-    createNewDivInsideDiv(toDoName, "title");
+    createNewTitleInsideDiv(toDoName, "title");
+    // createNewDivInsideDiv(toDoName, "title");
 
     createNewDivInsideDiv(toDoName, "description");
-    createNewDivInsideDiv(toDoName, "descTemp", "description");
-    createNewDivInsideDiv(toDoName, "descVal", "description");
+    createNewParaInsideDiv("description", "descTemp");
+    createNewParaInsideDiv("description", "descVal");
+    // createNewDivInsideDiv(toDoName, "description");
+    // createNewDivInsideDiv(toDoName, "descTemp", "description");
+    // createNewDivInsideDiv(toDoName, "descVal", "description");
 
     createNewDivInsideDiv(toDoName, "priority");
-    createNewDivInsideDiv(toDoName, "prioTemp", "priority");
-    createNewDivInsideDiv(toDoName, "prioVal", "priority");
+    createNewParaInsideDiv("priority", "prioTemp");
+    createNewParaInsideDiv("priority", "prioVal");
+    // createNewDivInsideDiv(toDoName, "priority");
+    // createNewDivInsideDiv(toDoName, "prioTemp", "priority");
+    // createNewDivInsideDiv(toDoName, "prioVal", "priority");
 
     createNewDivInsideDiv(toDoName, "date");
+    // createNewDivInsideDiv(toDoName, "date");
     createNewBtn(toDoName, "Done");
     createNewBtn(toDoName, "Delete");
   };
@@ -230,25 +246,25 @@ const domElementManipulation = () => {
   const appendCardFromArray = (targetCard, sourceObject, container) => {
     let target = document.querySelector(`.${targetCard}`);
     let title = target.querySelector(".title");
-    let desc = target.querySelector(".description");
-    let prio = target.querySelector(".priority");
-    let date = target.querySelector(".date");
-    let descTitle = desc.querySelector(".descTemp");
-    let descCont = desc.querySelector(".descVal");
-    let prioTitle = prio.querySelector(".prioTemp");
-    let prioCont = prio.querySelector(".prioVal");
+    // let desc = target.querySelector(".description");
+    // let prio = target.querySelector(".priority");
+    // let date = target.querySelector(".date");
+    // let descTitle = desc.querySelector(".descTemp");
+    // let descCont = desc.querySelector(".descVal");
+    // let prioTitle = prio.querySelector(".prioTemp");
+    // let prioCont = prio.querySelector(".prioVal");
 
     title.textContent = "Title: " + sourceObject.toDoTitle;
 
-    descTitle.textContent = "Details: ";
-    descCont.textContent = sourceObject.toDoDetails;
+    // descTitle.textContent = "Details: ";
+    // descCont.textContent = sourceObject.toDoDetails;
 
-    prioTitle.textContent = "Priority: ";
-    prioCont.textContent = sourceObject.toDoPrio;
+    // prioTitle.textContent = "Priority: ";
+    // prioCont.textContent = sourceObject.toDoPrio;
 
-    date.textContent = "Due date: " + sourceObject.toDoDueDate;
-    removeCard(target, sourceObject, container);
-    taskStatus(target, sourceObject, container);
+    // date.textContent = "Due date: " + sourceObject.toDoDueDate;
+    // removeCard(target, sourceObject, container);
+    // taskStatus(target, sourceObject, container);
   };
 
   // removes click target from visible card (deletes dom object) and from array
@@ -295,17 +311,28 @@ const domElementManipulation = () => {
     title.textContent = newTitle;
   };
 
+  // this will delete all cards in container
+  const clearCards = () => {
+    let body = document.querySelector("body");
+    let child = document.querySelector(".content");
+    body.removeChild(child);
+    createContentContainer();
+  };
+
   // this function renders all cards from the container array
   // in the future i need to add functionality for switching between arrays otherwise only first project will work correctly.
 
   const renderToDoCards = (container) => {
+    alert(container.array.length + "The length of the container array is this");
+    clearCards();
     let noOfCards = container.array.length;
 
     let renderCounter = 0;
 
     for (let i = 0; i < noOfCards; i++) {
-      goDom.createCardBoilerplate(`NewCard${renderCounter}`);
-      goDom.appendCardFromArray(`NewCard${renderCounter}`, container.array[i], container);
+      createNewDiv(`NewCard${i}`);
+      goDom.createCardBoilerplate(`NewCard${i}`);
+      goDom.appendCardFromArray(`NewCard${i}`, container.array[i], container);
       renderCounter++;
     }
   };
@@ -340,16 +367,15 @@ const domElementManipulation = () => {
     createCardBoilerplate,
   };
 };
-  //experiment with a function to create new project names
+//experiment with a function to create new project names
 
-  function newProjectName(){
-  
-  }
+function newProjectName() {}
 
 // submit form logic
-const formSubmit = (container) => {
-  let submit = document.querySelector("#submitForm");
-  let reset = document.querySelector("#resetForm");
+function formSubmit(container, sourceObjectID) {
+  console.log(sourceObjectID);
+  console.log(testHolder.get(sourceObjectID));
+
   let formToDoTitle = document.querySelector("#title");
   let formToDoDesc = document.querySelector("#taskDesc");
   let formToDoDate = document.querySelector("#taskDate");
@@ -358,64 +384,52 @@ const formSubmit = (container) => {
   let formToDoPrioHigh = document.querySelector("#prioHigh");
   let formToDoPrio;
   // counter is required to prevent new to do items for overriding existing elements
-  let counter = container.array.length + 1;
+  //current object length instead of this shit?
 
-  submit.addEventListener("click", (event) => {
-    event.preventDefault();
+  if (formToDoPrioLow === 1) {
+    formToDoPrio = "LOW";
+  } else if (formToDoPrioMed === 1) {
+    formToDoPrio = "MED";
+  } else {
+    formToDoPrio = "HIGH";
+  }
 
-    if (formToDoPrioLow === 1) {
-      formToDoPrio = "LOW";
-    } else if (formToDoPrioMed === 1) {
-      formToDoPrio = "MED";
-    } else {
-      formToDoPrio = "HIGH";
-    }
+  let newItem = createNewTodo(
+    formToDoTitle.value,
+    formToDoDesc.value,
+    formToDoDate.value,
+    formToDoPrio
+  );
 
-    let newItem = createNewTodo(
-      formToDoTitle.value,
-      formToDoDesc.value,
-      formToDoDate.value,
-      formToDoPrio
-    );
+  container.toDoContainer(newItem);
+  goDom.renderToDoCards(container);
+  // createNewCard(newItem, `NewCard${counter}`, container);
 
-    createNewCard(newItem, `NewCard${counter}`, container);
-    counter++;
-    formReset(
-      formToDoDate,
-      formToDoTitle,
-      formToDoDesc,
-      formToDoPrioLow,
-      formToDoPrioMed,
-      formToDoPrioHigh
-    );
-  });
+  formReset(
+    formToDoDate,
+    formToDoTitle,
+    formToDoDesc,
+    formToDoPrioLow,
+    formToDoPrioMed,
+    formToDoPrioHigh
+  );
 
-  reset.addEventListener("click", () => {
-    formReset(
-      formToDoDate,
-      formToDoTitle,
-      formToDoDesc,
-      formToDoPrioLow,
-      formToDoPrioMed,
-      formToDoPrioHigh
-    );
-  });
-  return counter;
-};
+  console.log(`The current container length is: ${container.array.length}`);
+  return;
+}
 
 // function to create new project cards when button is pressed
 // this function needs to check for project ID ?
 const addNewProjectCard = () => {
   goDom.createNewBtn("header", "NewProject");
   let counterP = projectContainer.array.length;
-  
 
   let btn = document.querySelector(".NewProject");
   btn.addEventListener("click", () => {
-    console.log(`counter is at `+counterP);
+    console.log(`counter is at ` + counterP);
     let newProject = prompt("Enter the new project name");
     let newProjectItem = createNewProject(newProject, counterP);
-  
+
     createNewProjectCard(newProjectItem, `NewProj${counterP}`);
     counterP++;
   });
@@ -436,21 +450,18 @@ function createNewProjectCard(contItem, projName) {
   let arrLength = projectContainer.array.length;
   projectContainer.toDoContainer(contItem);
   goDom.createProjectCardBoilerplate(projName);
-  goDom.appendProjectCard(
-    projName,
-    projectContainer.array[arrLength]
-  );
+  goDom.appendProjectCard(projName, projectContainer.array[arrLength]);
 }
 
 //function to reset form
-function formReset(
-  formToDoDate,
-  formToDoTitle,
-  formToDoDesc,
-  formToDoPrioLow,
-  formToDoPrioMed,
-  formToDoPrioHigh
-) {
+function formReset() {
+  let formToDoTitle = document.querySelector("#title");
+  let formToDoDesc = document.querySelector("#taskDesc");
+  let formToDoDate = document.querySelector("#taskDate");
+  let formToDoPrioLow = document.querySelector("#prioLow");
+  let formToDoPrioMed = document.querySelector("#prioMed");
+  let formToDoPrioHigh = document.querySelector("#prioHigh");
+
   formToDoDate.value = null;
   formToDoTitle.value = "";
   formToDoDesc.value = "";
@@ -499,32 +510,34 @@ function delCont() {
 // takes back to main menu, clears pervious page
 function backToMainMenu(sourceObjectID, container) {
   let home = document.querySelector(".home");
-  home.addEventListener("click", () => {
-    let title = document.querySelector("h1");
-    if (title !== "Your active projects") {
-      console.log(`source project id is `+sourceObjectID);
-   
-      testHolder.delete(sourceObjectID);
-      testHolder.set(sourceObjectID, container);
-      console.log(container.array);
-      console.log(sourceObjectID.array);
-      console.log(testHolder);
-      console.log(testHolder.get(sourceObjectID));
-      // holderArr.push(testArr);
-      delContTd();
+  let submit = document.querySelector("#submitForm");
 
-      renderHomePage(sourceObjectID);
-      console.log(testArr);
-      
-      // console.log(holderArr);
-      return (sourceObjectID.array);
-    } else return;
-  });
+  let title = document.querySelector("h1");
+  // submit.removeEventListener("click", (event) => {
+  //   event.preventDefault();
+  //   formSubmit(container);});
+  if (title !== "Your active projects") {
+    console.log(`source project id is ` + sourceObjectID);
+
+    testHolder.delete(sourceObjectID);
+    testHolder.set(sourceObjectID, container);
+    console.log(container.array);
+    console.log(sourceObjectID.array);
+    console.log(testHolder);
+    console.log(testHolder.get(sourceObjectID));
+    // holderArr.push(testArr);
+    delContTd();
+
+    renderHomePage(sourceObjectID);
+    console.log(testArr);
+
+    // console.log(holderArr);
+    return sourceObjectID.array;
+  } else return;
 }
 
 // renders the home page
 function renderHomePage(sourceObjectID) {
-
   goDom.changeTitle("Your active projects");
   createContentContainer();
   console.log(sourceObjectID);
@@ -543,9 +556,9 @@ function renderHomePage(sourceObjectID) {
 
 let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
-let newHolder = holder(25, 'this');
-// let container = toDoObjects(); 
-// let formSub = formSubmit(container); 
+let newHolder = holder(25, "this");
+// let container = toDoObjects();
+// let formSub = formSubmit(container);
 const testHolder = new Map();
 // console.log(newHolder);
 // console.log(newHolder.objectID);
@@ -562,25 +575,43 @@ console.log(holderArr.length);
 
 // console.log('at array 0 the id is '+testArr[0].objectID);
 
-
 /// renders the to do page
 function renderToDoPage(sourceObjectID, holderInput) {
   let newContID = sourceObjectID;
   newContID = toDoObjects();
   let container = newContID;
-  if (holderInput !== undefined) {container = holderInput}
-  let formSub = formSubmit(container); 
+  if (holderInput !== undefined) {
+    container = holderInput;
+  }
+
   console.log(`keep testing this shit ` + container);
   goDom.changeTitle("To Do List");
   createContentContainer();
-
+  console.log(`The current container length is: ${container.array.length}`);
   goDom.createNewBtn("header", "home");
   goDom.createNewBtn("header", "add");
 
   goDom.renderToDoCards(container);
- 
+
   goDom.toggleFormVisibility();
-  backToMainMenu(sourceObjectID, container);
+
+  let home = document.querySelector(".home");
+  home.addEventListener("click", () => {
+    backToMainMenu(sourceObjectID, container);
+  });
+
+  let submit = document.querySelector("#submitForm");
+
+  submit.onclick = function (event) {
+    event.preventDefault();
+    alert("clicked");
+    formSubmit(container, sourceObjectID);
+  };
+
+  let reset = document.querySelector("#resetForm");
+  reset.onclick = function () {
+    formReset();
+  };
 }
 
 renderHomePage();
