@@ -3,8 +3,8 @@ body {
 }
 
 .content>div {
-    height: 250px;
-    width: 250px;
+    height: 300px;
+    width: 300px;
     background: white;
     border: 2px solid black;
     display: grid;
