@@ -175,6 +175,7 @@ const domElementManipulation = () => {
   };
 
   // append project card
+  // if statement displays up to 3 of the projects in the card
   const appendProjectCard = (targetCard, sourceObject, sourceContainer) => {
     let target = document.querySelector(`.${targetCard}`);
     let projectTitle = target.querySelector(".projectTitle");
@@ -384,14 +385,27 @@ function formSubmit(container, sourceObjectID) {
   let formToDoPrioMed = document.querySelector("#prioMed");
   let formToDoPrioHigh = document.querySelector("#prioHigh");
   let formToDoPrio;
-
+//check for empty, if empty throw error and stop action
+console.log(formToDoTitle.value);
+console.log(formToDoDate.value);
+console.log(formToDoPrioLow.value);
+console.log(formToDoPrioMed.value);
+console.log(formToDoPrioHigh.value);
+  if (formToDoTitle.value == '') {
+    alert('Title cannot be empty!');
+    return;
+  } else if (formToDoDate.value == '') {
+    alert('Due date cannot be empty!');
+    return;
+  } 
+  // for setting priority depending on buttons pressed 
   if (formToDoPrioLow === 1) {
     formToDoPrio = "LOW";
   } else if (formToDoPrioMed === 1) {
     formToDoPrio = "MED";
   } else {
     formToDoPrio = "HIGH";
-  }
+  } 
 
   let newItem = createNewTodo(
     formToDoTitle.value,
