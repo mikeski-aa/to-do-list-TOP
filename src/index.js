@@ -27,7 +27,6 @@ const createNewTodo = (title, details, dueDate, prio) => {
   };
 };
 
-
 //factory function for creation of new projects which are to go into projects array
 
 const createNewProject = (title, id) => {
@@ -127,6 +126,8 @@ const domElementManipulation = () => {
 
     createNewTitleInsideDiv(projectName, "projectTitle");
     createNewDivInsideDiv(projectName, "firstItem");
+    createNewDivInsideDiv(projectName, "secondItem");
+    createNewDivInsideDiv(projectName, "thirdItem");
 
     createNewBtn(projectName, "OpenProject");
     createNewBtn(projectName, "DeleteProject");
@@ -165,10 +166,9 @@ const domElementManipulation = () => {
         console.log(toDoMap);
         let container = toDoObjects();
         renderToDoPage(sourceObject.id, container);
-
-      } else {renderToDoPage(sourceObject.id, toDoMap.get(sourceObject.id));}
-
-      
+      } else {
+        renderToDoPage(sourceObject.id, toDoMap.get(sourceObject.id));
+      }
 
       return;
     });
@@ -179,15 +179,52 @@ const domElementManipulation = () => {
     let target = document.querySelector(`.${targetCard}`);
     let projectTitle = target.querySelector(".projectTitle");
     let firstItem = target.querySelector(".firstItem");
+    let secondItem = target.querySelector(".secondItem");
+    let thirdItem = target.querySelector(".thirdItem");
     projectTitle.textContent = sourceObject.projectTitle;
+    console.log(sourceObject.id);
 
-    // prevents errors when project is empty and you go back
-    // if (sourceContainer.array.length !== 0) {
-    //   firstItem.textContent =
-    //     sourceContainer.array[0].toDoTitle +
-    //     " , " +
-    //     sourceContainer.array[0].toDoDueDate;
-    // }
+    if (
+      toDoMap.has(sourceObject.id) &&
+      toDoMap.get(sourceObject.id).array.length > 2
+    ) {
+      firstItem.textContent =
+        toDoMap.get(sourceObject.id).array[0].toDoTitle +
+        " DUE ON: " +
+        toDoMap.get(sourceObject.id).array[0].toDoDueDate;
+      secondItem.textContent =
+        toDoMap.get(sourceObject.id).array[1].toDoTitle +
+        " DUE ON: " +
+        toDoMap.get(sourceObject.id).array[1].toDoDueDate;
+      thirdItem.textContent =
+        toDoMap.get(sourceObject.id).array[2].toDoTitle +
+        " DUE ON: " +
+        toDoMap.get(sourceObject.id).array[2].toDoDueDate;
+    } else if (
+      toDoMap.has(sourceObject.id) &&
+      toDoMap.get(sourceObject.id).array.length > 1
+    ) {
+      firstItem.textContent =
+        toDoMap.get(sourceObject.id).array[0].toDoTitle +
+        " DUE ON: " +
+        toDoMap.get(sourceObject.id).array[0].toDoDueDate;
+      secondItem.textContent =
+        toDoMap.get(sourceObject.id).array[1].toDoTitle +
+        " DUE ON: " +
+        toDoMap.get(sourceObject.id).array[1].toDoDueDate;
+    } else if (
+      toDoMap.has(sourceObject.id) &&
+      toDoMap.get(sourceObject.id).array.length > 0
+    ) {
+      firstItem.textContent =
+        toDoMap.get(sourceObject.id).array[0].toDoTitle +
+        " DUE ON: " +
+        toDoMap.get(sourceObject.id).array[0].toDoDueDate;
+    } else {
+      firstItem.textContent = "To Do item 1" + " DUE ON: " + "Due Date 1";
+      secondItem.textContent = "To Do item 2" + " DUE ON: " + "Due Date 2";
+      thirdItem.textContent = "To Do item 3" + " DUE ON: " + "Due Date 3";
+    }
 
     openProjectCard(target, sourceObject);
     removeProjectCard(target, sourceObject);
@@ -319,7 +356,6 @@ const domElementManipulation = () => {
       projectRenderCounter++;
     }
   };
-  
 
   return {
     renderToDoCards,
@@ -470,12 +506,11 @@ function backToMainMenu(sourceObjectID, container) {
     toDoMap.delete(sourceObjectID);
     toDoMap.set(sourceObjectID, container);
     console.log(toDoMap);
-    
+    console.log(toDoMap.get(sourceObjectID).array[0]);
 
     delContTd();
 
     renderHomePage(sourceObjectID);
-
 
     return sourceObjectID.array;
   } else return;
@@ -502,13 +537,10 @@ function renderHomePage(sourceObjectID) {
 let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
 
-
 const toDoMap = new Map();
-
 
 /// renders the to do page - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function renderToDoPage(sourceObjectID, holderInput) {
-
   let container = holderInput;
 
   // let container = toDoObjects();
@@ -522,14 +554,14 @@ function renderToDoPage(sourceObjectID, holderInput) {
   goDom.renderToDoCards(container);
   goDom.toggleFormVisibility();
 
-// go back home
+  // go back home
   let home = document.querySelector(".home");
 
   home.addEventListener("click", () => {
     backToMainMenu(sourceObjectID, container);
   });
 
-// handles submission of form
+  // handles submission of form
   let submit = document.querySelector("#submitForm");
 
   submit.onclick = function (event) {
@@ -538,7 +570,7 @@ function renderToDoPage(sourceObjectID, holderInput) {
     formSubmit(container, sourceObjectID);
   };
 
-// handles form reset
+  // handles form reset
   let reset = document.querySelector("#resetForm");
   reset.onclick = function () {
     formReset();
