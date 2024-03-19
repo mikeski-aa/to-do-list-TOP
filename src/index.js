@@ -47,13 +47,13 @@ const createNewProject = (title, id) => {
 const toDoObjects = () => {
   const array = [];
 
-  function toDoContainer(myItem) {
-    array.push(myItem);
-  }
+  // function toDoContainer(myItem) {
+  //   array.push(myItem);
+  // }
 
   return {
-    toDoContainer,
-    array,
+    // toDoContainer,
+    array
   };
 };
 
@@ -433,7 +433,7 @@ function formSubmit(container, sourceObjectID) {
     formToDoPrio
   );
 
-  container.toDoContainer(newItem);
+  container.array.push(newItem);
   goDom.renderToDoCards(container);
   // createNewCard(newItem, `NewCard${counter}`, container);
 
@@ -475,7 +475,7 @@ const addNewProjectCard = () => {
 
     createNewProjectCard(newProjectItem, `NewProj${counterP}`);
     counterP++;
-    // setContainer();
+    setContainer();
   });
 
   return counterP;
@@ -485,7 +485,7 @@ const addNewProjectCard = () => {
 function createNewProjectCard(contItem, projName) {
   console.log(projectContainer);
   let arrLength = projectContainer.array.length;
-  projectContainer.toDoContainer(contItem);
+  projectContainer.array.push(contItem);
   goDom.createProjectCardBoilerplate(projName);
   goDom.appendProjectCard(projName, projectContainer.array[arrLength]);
 }
@@ -635,55 +635,57 @@ function renderToDoPage(sourceObjectID, holderInput) {
 
 // localstorage testing
 
-// function checkStorage(){
-//   if (localStorage.getItem('1') === null){
-//     console.log('localStorage is empty')
-//     let testCont = toDoObjects();
-//     return projectContainer = testCont;
-//   } else {
-//     let projectcontainer_serializd = localStorage.getItem('1');
-//     let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
-//     let clone = structuredClone(toDoObjects())
-//     console.log(clone);
+function checkStorage(){
+  if (localStorage.getItem('1') === null){
+    console.log('localStorage is empty')
+    let testCont = toDoObjects();
+    return projectContainer = testCont;
+  } else {
+    let projectcontainer_serializd = localStorage.getItem('1');
+    let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
 
-//     return projectContainer = projectcontainer_normal;
-//   }
-// };
+    return projectContainer = projectcontainer_normal;
+  }
+};
 
 // // storing projectcontainer in local data
-// function setContainer(){
-//   let projectcontainer_serializd = JSON.stringify(projectContainer);
-//   localStorage.setItem('1', projectcontainer_serializd);
-//   console.log(`Proj Container should look like this: ` + projectContainer)
-//   console.log(localStorage);
-//   // localStorage.removeItem('1');
 
-// }
+function setContainer(){
+  let projectcontainer_serializd = JSON.stringify(projectContainer);
+  localStorage.setItem('1', projectcontainer_serializd);
+  console.log(`Proj Container should look like this: ` + projectContainer)
+  console.log(localStorage);
+  // localStorage.removeItem('1');
+
+}
 
 // function to read local storage
-// function getContainer(){
-//   let projectcontainer_serializd = localStorage.getItem('1');
-//   let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
-//   console.log(JSON.parse(projectcontainer_serializd));
-//   Object.assign(projectcontainer_normal, toDoContainer());
-//   return projectContainer = projectcontainer_normal;
-// }
-console.log(localStorage);
-localStorage.removeItem('1');
-console.log(localStorage);
-// let projectContainer;
+function getContainer(){
+  let projectcontainer_serializd = localStorage.getItem('1');
+  let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
+  console.log(JSON.parse(projectcontainer_serializd));
+  Object.assign(projectcontainer_normal, toDoContainer());
+  return projectContainer = projectcontainer_normal;
+}
+// console.log(localStorage);
+// localStorage.removeItem('1');
+// console.log(localStorage);
+let projectContainer;
 
 // Object.setPrototypeOf(projectContainer, toDoObjects)
 
-// checkStorage();
+checkStorage();
 
 
 // need to include this or nothing works  - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - -
 // let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
 const toDoMap = new Map();
-let projectContainer = toDoObjects();
+// let projectContainer = toDoObjects();
 console.log(projectContainer);
 // renders home page for start of website
 
 renderHomePage();
+
+
+
