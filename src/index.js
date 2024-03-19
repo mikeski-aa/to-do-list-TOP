@@ -153,8 +153,8 @@ const domElementManipulation = () => {
 
   // open project button
   const openProjectCard = (targetCard, sourceObject) => {
-    let openTest = targetCard.querySelector(".OpenProject");
-    openTest.addEventListener("click", () => {
+    let openProjCard = targetCard.querySelector(".OpenProject");
+    openProjCard.addEventListener("click", () => {
       delCont();
       // alert(sourceObject.id);
       // alert(sourceObject.firstOpen);
@@ -384,21 +384,39 @@ function formSubmit(container, sourceObjectID) {
   let formToDoPrioLow = document.querySelector("#prioLow");
   let formToDoPrioMed = document.querySelector("#prioMed");
   let formToDoPrioHigh = document.querySelector("#prioHigh");
-  let formToDoDueDay = document.querySelector("#dueTime");
   let formToDoPrio;
   //check for empty, if empty throw error and stop action
   console.log(formToDoTitle.value);
-  console.log(formToDoDate.value);
+  console.log(`Today date value ` + formToDoDate.value);
   console.log(formToDoPrioLow.value);
   console.log(formToDoPrioMed.value);
   console.log(formToDoPrioHigh.value);
+
+  // checking to make sure correct form submission format is followed
   if (formToDoTitle.value == "") {
     alert("Title cannot be empty!");
     return;
   } else if (formToDoDate.value == "") {
-    alert("Due date cannot be empty!");
+    alert("Date cannot be empty!");
+    return;
+  } else if (+formToDoDate.value.split("-")[0] > +taskDate.max.split("-")[0]) {
+    alert("Due date cannot be more than 1 year in the future!");
+    return;
+  } else if (+formToDoDate.value.split("-")[0] < +taskDate.min.split("-")[0]) {
+    alert("Due date cannot be before today!");
     return;
   }
+
+  // checking to make sure at least one priority is selected
+  if (
+    formToDoPrioLow.checked === false &&
+    formToDoPrioMed.checked === false &&
+    formToDoPrioHigh.checked === false
+  ) {
+    alert("You must select one task priority!");
+    return;
+  }
+
   // for setting priority depending on buttons pressed
   if (formToDoPrioLow === 1) {
     formToDoPrio = "LOW";
@@ -425,8 +443,7 @@ function formSubmit(container, sourceObjectID) {
     formToDoDesc,
     formToDoPrioLow,
     formToDoPrioMed,
-    formToDoPrioHigh,
-    formToDoDueDay
+    formToDoPrioHigh
   );
 
   console.log(`The current container length is: ${container.array.length}`);
@@ -441,6 +458,7 @@ const addNewProjectCard = () => {
 
   let btn = document.querySelector(".NewProject");
   btn.addEventListener("click", () => {
+    
     console.log(`counter is at ` + counterP);
     let newProject = prompt("Enter the new project name");
     // if (prompt())
@@ -452,10 +470,12 @@ const addNewProjectCard = () => {
       alert("You must enter a project name");
       return;
     }
+
     let newProjectItem = createNewProject(newProject, counterP);
 
     createNewProjectCard(newProjectItem, `NewProj${counterP}`);
     counterP++;
+    // setContainer();
   });
 
   return counterP;
@@ -463,6 +483,7 @@ const addNewProjectCard = () => {
 
 //function for creating new project cards
 function createNewProjectCard(contItem, projName) {
+  console.log(projectContainer);
   let arrLength = projectContainer.array.length;
   projectContainer.toDoContainer(contItem);
   goDom.createProjectCardBoilerplate(projName);
@@ -477,7 +498,6 @@ function formReset() {
   let formToDoPrioLow = document.querySelector("#prioLow");
   let formToDoPrioMed = document.querySelector("#prioMed");
   let formToDoPrioHigh = document.querySelector("#prioHigh");
-  let formToDoDueDay = document.querySelector("#dueTime");
 
   formToDoDate.value = null;
   formToDoTitle.value = "";
@@ -485,7 +505,6 @@ function formReset() {
   formToDoPrioLow.checked = false;
   formToDoPrioMed.checked = false;
   formToDoPrioHigh.checked = false;
-  formToDoDueDay.value = null;
 }
 
 // //function to delete to do content container
@@ -561,15 +580,14 @@ function renderHomePage(sourceObjectID) {
   goDom.changeTitle("Your active projects");
   createContentContainer();
   console.log(sourceObjectID);
-  let arr = [];
-  arr.push(sourceObjectID);
-  console.log(arr);
+
   // goDom.createNewBtn("header", "NewProject");
 
-  let test = addNewProjectCard();
-  test;
+  let addNewProjectCardHere = addNewProjectCard();
+  addNewProjectCardHere;
   goDom.renderProjectCards();
-  // addProjCards;
+
+
 }
 
 /// renders the to do page - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -606,31 +624,66 @@ function renderToDoPage(sourceObjectID, holderInput) {
     formReset();
   };
 
-  //add event listener to check for changes in the value of #dueTime
-  let customDate = document.querySelector("#dueTime");
-  customDate.onclick = function () {
-    let dateSelect = document.querySelector(".dateSelect");
-    console.log(customDate.value);
-    console.log("custom date clicked!!");
-    if (customDate.value === "customDay") {
-      console.log("boom we got our value!");
-      dateSelect.style.visibility = "visible";
-      dateSelect.style.height = "100%";
-    } else {
-      dateSelect.style.visibility = "hidden";
-      dateSelect.style.height = "0%";
-    }
-  };
-
   // set current time for today to prevent selection of dates earlier than toady
   setMinMaxDate();
+  console.log(taskDate.min.split(`-`)[0]);
+
+  console.log(container);
+
+  
 }
+
+// localstorage testing
+
+// function checkStorage(){
+//   if (localStorage.getItem('1') === null){
+//     console.log('localStorage is empty')
+//     let testCont = toDoObjects();
+//     return projectContainer = testCont;
+//   } else {
+//     let projectcontainer_serializd = localStorage.getItem('1');
+//     let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
+//     let clone = structuredClone(toDoObjects())
+//     console.log(clone);
+
+//     return projectContainer = projectcontainer_normal;
+//   }
+// };
+
+// // storing projectcontainer in local data
+// function setContainer(){
+//   let projectcontainer_serializd = JSON.stringify(projectContainer);
+//   localStorage.setItem('1', projectcontainer_serializd);
+//   console.log(`Proj Container should look like this: ` + projectContainer)
+//   console.log(localStorage);
+//   // localStorage.removeItem('1');
+
+// }
+
+// function to read local storage
+// function getContainer(){
+//   let projectcontainer_serializd = localStorage.getItem('1');
+//   let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
+//   console.log(JSON.parse(projectcontainer_serializd));
+//   Object.assign(projectcontainer_normal, toDoContainer());
+//   return projectContainer = projectcontainer_normal;
+// }
+console.log(localStorage);
+localStorage.removeItem('1');
+console.log(localStorage);
+// let projectContainer;
+
+// Object.setPrototypeOf(projectContainer, toDoObjects)
+
+// checkStorage();
+
+
 // need to include this or nothing works  - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - -
-
-let projectContainer = toDoObjects();
+// let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
-
 const toDoMap = new Map();
+let projectContainer = toDoObjects();
+console.log(projectContainer);
 // renders home page for start of website
 
 renderHomePage();
