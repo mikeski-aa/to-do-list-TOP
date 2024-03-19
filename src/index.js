@@ -384,28 +384,29 @@ function formSubmit(container, sourceObjectID) {
   let formToDoPrioLow = document.querySelector("#prioLow");
   let formToDoPrioMed = document.querySelector("#prioMed");
   let formToDoPrioHigh = document.querySelector("#prioHigh");
+  let formToDoDueDay = document.querySelector("#dueTime");
   let formToDoPrio;
-//check for empty, if empty throw error and stop action
-console.log(formToDoTitle.value);
-console.log(formToDoDate.value);
-console.log(formToDoPrioLow.value);
-console.log(formToDoPrioMed.value);
-console.log(formToDoPrioHigh.value);
-  if (formToDoTitle.value == '') {
-    alert('Title cannot be empty!');
+  //check for empty, if empty throw error and stop action
+  console.log(formToDoTitle.value);
+  console.log(formToDoDate.value);
+  console.log(formToDoPrioLow.value);
+  console.log(formToDoPrioMed.value);
+  console.log(formToDoPrioHigh.value);
+  if (formToDoTitle.value == "") {
+    alert("Title cannot be empty!");
     return;
-  } else if (formToDoDate.value == '') {
-    alert('Due date cannot be empty!');
+  } else if (formToDoDate.value == "") {
+    alert("Due date cannot be empty!");
     return;
-  } 
-  // for setting priority depending on buttons pressed 
+  }
+  // for setting priority depending on buttons pressed
   if (formToDoPrioLow === 1) {
     formToDoPrio = "LOW";
   } else if (formToDoPrioMed === 1) {
     formToDoPrio = "MED";
   } else {
     formToDoPrio = "HIGH";
-  } 
+  }
 
   let newItem = createNewTodo(
     formToDoTitle.value,
@@ -424,7 +425,8 @@ console.log(formToDoPrioHigh.value);
     formToDoDesc,
     formToDoPrioLow,
     formToDoPrioMed,
-    formToDoPrioHigh
+    formToDoPrioHigh,
+    formToDoDueDay
   );
 
   console.log(`The current container length is: ${container.array.length}`);
@@ -441,6 +443,15 @@ const addNewProjectCard = () => {
   btn.addEventListener("click", () => {
     console.log(`counter is at ` + counterP);
     let newProject = prompt("Enter the new project name");
+    // if (prompt())
+    if (newProject === null) {
+      return;
+    }
+
+    if (newProject === "") {
+      alert("You must enter a project name");
+      return;
+    }
     let newProjectItem = createNewProject(newProject, counterP);
 
     createNewProjectCard(newProjectItem, `NewProj${counterP}`);
@@ -449,14 +460,6 @@ const addNewProjectCard = () => {
 
   return counterP;
 };
-
-// function for adding new items to array and creating cards easily
-function createNewCard(contItem, cardName, container) {
-  let arrLength = container.array.length;
-  container.toDoContainer(contItem);
-  goDom.createCardBoilerplate(cardName);
-  goDom.appendCardFromArray(cardName, container.array[arrLength], container);
-}
 
 //function for creating new project cards
 function createNewProjectCard(contItem, projName) {
@@ -474,6 +477,7 @@ function formReset() {
   let formToDoPrioLow = document.querySelector("#prioLow");
   let formToDoPrioMed = document.querySelector("#prioMed");
   let formToDoPrioHigh = document.querySelector("#prioHigh");
+  let formToDoDueDay = document.querySelector("#dueTime");
 
   formToDoDate.value = null;
   formToDoTitle.value = "";
@@ -481,6 +485,7 @@ function formReset() {
   formToDoPrioLow.checked = false;
   formToDoPrioMed.checked = false;
   formToDoPrioHigh.checked = false;
+  formToDoDueDay.value = null;
 }
 
 // //function to delete to do content container
@@ -530,6 +535,27 @@ function backToMainMenu(sourceObjectID, container) {
   } else return;
 }
 
+// function set min and max current dates
+function setMinMaxDate() {
+  let currentDate = new Date();
+  let day = currentDate.getDate();
+  let month = currentDate.getMonth();
+  let year = currentDate.getFullYear();
+  year = year + 1;
+
+  if (month < 10) {
+    month = "0" + `${month}`;
+  }
+
+  let maxDate = `${year}-${month}-${day}`;
+
+  //sets max date to current date + 1 year;
+  taskDate.max = maxDate;
+
+  // sets min dat to current date
+  taskDate.min = new Date().toISOString().split("T")[0];
+}
+
 // renders the home page  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function renderHomePage(sourceObjectID) {
   goDom.changeTitle("Your active projects");
@@ -545,13 +571,6 @@ function renderHomePage(sourceObjectID) {
   goDom.renderProjectCards();
   // addProjCards;
 }
-
-// need to include this or nothing works  - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - -
-
-let projectContainer = toDoObjects();
-let goDom = domElementManipulation();
-
-const toDoMap = new Map();
 
 /// renders the to do page - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function renderToDoPage(sourceObjectID, holderInput) {
@@ -570,17 +589,14 @@ function renderToDoPage(sourceObjectID, holderInput) {
 
   // go back home
   let home = document.querySelector(".home");
-
   home.addEventListener("click", () => {
     backToMainMenu(sourceObjectID, container);
   });
 
   // handles submission of form
   let submit = document.querySelector("#submitForm");
-
   submit.onclick = function (event) {
     event.preventDefault();
-    // alert("clicked");
     formSubmit(container, sourceObjectID);
   };
 
@@ -589,6 +605,32 @@ function renderToDoPage(sourceObjectID, holderInput) {
   reset.onclick = function () {
     formReset();
   };
+
+  //add event listener to check for changes in the value of #dueTime
+  let customDate = document.querySelector("#dueTime");
+  customDate.onclick = function () {
+    let dateSelect = document.querySelector(".dateSelect");
+    console.log(customDate.value);
+    console.log("custom date clicked!!");
+    if (customDate.value === "customDay") {
+      console.log("boom we got our value!");
+      dateSelect.style.visibility = "visible";
+      dateSelect.style.height = "100%";
+    } else {
+      dateSelect.style.visibility = "hidden";
+      dateSelect.style.height = "0%";
+    }
+  };
+
+  // set current time for today to prevent selection of dates earlier than toady
+  setMinMaxDate();
 }
+// need to include this or nothing works  - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - -
+
+let projectContainer = toDoObjects();
+let goDom = domElementManipulation();
+
+const toDoMap = new Map();
 // renders home page for start of website
+
 renderHomePage();
