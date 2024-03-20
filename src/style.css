@@ -1,21 +1,164 @@
 body {
-    background-color: grey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(150, 150, 150);
+    justify-content: center;
+  
+
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   
+}
+
+header>button{
+    border-radius: 12px;
+}
+
+.content {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 0.2fr));
+    gap: 2rem;
 }
 
 .content>div {
     height: 300px;
-    width: 300px;
     background: white;
     border: 2px solid black;
     display: grid;
 }
 
+.content>[class*='NewProj'] {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: space-between;
+    min-height: 10vh;
+    max-height: 15vh;
+    border-radius: 12px;
+    padding: 0.5rem;
+}
+
+.OpenProject {
+   width: 50%;
+   height: 75%;
+}
+
+.DeleteProject {
+    width: 50%;
+    height: 75%;
+ }
+
+.content>[class*='NewProj']>h3 {
+    margin: 0;
+    text-align: center;
+}
+
+.content>[class*='NewProj']>button {
+    max-height: 34px;
+    padding: 0;
+    justify-items: center;
+    border-radius: 12px;
+    margin-bottom: 0.25rem;
+}
+
+[class*='firstItem'], [class*='secondItem'], [class*='thirdItem'] {
+    height: 1em;
+    text-align: center;
+}
+
 form {
+
     display: grid;
     visibility: hidden;
     height: 0;
+    border-radius: 12px;
+    border: 5px solid black;
+    padding: 0.5rem;
+    justify-items: center;
+    gap: 0.4rem;
+    background-color: blanchedalmond;
+    margin-bottom: 2rem;
 }
 
-.buttons>button {
- 
+label, legend {
+    font-weight: bold;
+}
+
+div>label{
+    font-weight: unset;
+}
+
+[class='dateSelect'] {
+    display: grid;
+    gap: 0.25rem;
+    font-weight: bold;
+    
+}
+
+#taskDate{
+    border-radius: 12px;
+    padding: 0.11rem;
+    border: 1px solid black;
+}
+form>input, form>textarea{
+    border-radius: 12px;
+    border: 1px solid black;
+    padding: 0.5rem;
+}
+#submitForm, #resetForm {
+    border-radius: 12px;
+}
+
+hr{
+    width: 300px;
+}
+
+.content>[class*='NewCard'] {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    justify-items: center;
+    align-content: space-between;
+    min-height: 10vh;
+    max-height: fit-content;
+    border-radius: 12px;
+    padding: 0.5rem;
+    text-align: center;
+}
+.descVal {
+    display: flex;
+    overflow-y: scroll;
+    flex-grow: 0;
+}
+[class*='NewCard']>h3 {
+    width: 100%;
+    text-align: center;
+}
+
+.description, .priority, .date {
+    width: 100%;
+}
+
+.description {
+    display: flex;
+    gap: 2rem;
+}
+.priority {
+    display: flex;
+    gap: 5rem;
+    
+}
+
+.prioVal {
+    display: flex;
+    
 }

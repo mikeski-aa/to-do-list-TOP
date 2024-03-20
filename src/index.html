@@ -11,12 +11,13 @@
     </header>
     <form action="none" method="push">
       <label for="title">Enter Task Name</label>
-      <input id="title" type="text" name="title" required />
-
+      <input id="title" type="text" name="title" maxlength="15" required />
+      <hr>
       <label for="taskDesc">What needs to be done?</label>
       <textarea id="taskDesc" type="text" name="taskDesc" required></textarea>
-
+      <hr>
       <legend for="choiceOne">What is the task priority?</legend>
+     
       <div>
         <label for="choiceOne">Low</label>
         <input id="prioLow" type="radio" name="prioStatus" value="0" />
@@ -27,6 +28,7 @@
         <label for="choiceThree">High</label>
         <input id="prioHigh" type="radio" name="prioStatus" value="0" />
       </div>
+      <hr>
       <div class="dateSelect">
         <label for="taskDate">When is the task due?</label>
         <input id="taskDate" type="date" min="" max="" name="taskDate" required />

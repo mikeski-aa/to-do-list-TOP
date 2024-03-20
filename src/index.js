@@ -302,19 +302,27 @@ const domElementManipulation = () => {
     });
   };
   // enables task status toggle on card and within array
-  const taskStatus = (target, sourceObject) => {
+  const taskStatus = (target, sourceObject, container) => {
     let btn = target.querySelector(".Done");
     btn.addEventListener("click", (e) => {
       if (sourceObject.toDoCompleted === true) {
         sourceObject.toDoCompleted = false;
+        console.log(sourceObject.toDoCompleted);
+        toDoMap.set(sourceObject.id, container);
+        setToDoStorage();
+// edit visibility for this shit if when toggled
       } else {
         sourceObject.toDoCompleted = true;
+        toDoMap.set(sourceObject.id, container);
+        console.log(sourceObject.toDoCompleted);
+        setToDoStorage();
+// edit visibility for this shit if when toggled
       }
     });
   };
 
   // edit buttons lets you edit stuff on the card
-  const editToDo = (target, sourceObject) => {
+  const editToDo = (target) => {
     let btn = target.querySelector(".Edit")
     btn.addEventListener("click", (e) => {
       let parent = btn.closest('div')
@@ -338,6 +346,8 @@ const domElementManipulation = () => {
       titleVal.contentEditable = false;
       sourceObject.toDoDetails = descVal.textContent;
       sourceObject.toDoTitle = titleVal.textContent;
+      descVal.style.backgroundColor = "#FFFFFF";
+      titleVal.style.backgroundColor = "#FFFFFF";
       toDoMap.set(sourceObject.id, container);
       setToDoStorage();
 
