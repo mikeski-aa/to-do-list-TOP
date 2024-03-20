@@ -53,7 +53,7 @@ const toDoObjects = () => {
 
   return {
     // toDoContainer,
-    array
+    array,
   };
 };
 
@@ -95,6 +95,14 @@ const domElementManipulation = () => {
 
     target.appendChild(btn);
   };
+
+  const createNewBtnInsideDiv = (targetAppend, btnTxt) => {
+    let target = targetAppend.querySelector(".buttons")
+
+    let btn = document.createElement("button");
+    btn.classList.add(`${btnTxt}`);
+    target.appendChild(btn);
+  }
 
   // creates a div inside div with additional functionality to create a paragraph within subsequent div
   const createNewDivInsideDiv = (targetDiv, newDivClass) => {
@@ -143,12 +151,13 @@ const domElementManipulation = () => {
       content.removeChild(child);
       console.log(sourceObject.id);
       toDoMap.delete(sourceObject.id);
+      setToDoStorage();
       console.log(toDoMap);
       projectContainer.array.splice(
         projectContainer.array.indexOf(sourceObject),
         1
       );
-      setContainer()
+      setContainer();
     });
   };
 
@@ -245,8 +254,13 @@ const domElementManipulation = () => {
     createNewParaInsideDiv(toDoName, "priority", "prioVal");
 
     createNewDivInsideDiv(toDoName, "date");
+
+    createNewDivInsideDiv(toDoName, "buttons");
     createNewBtn(toDoName, "Done");
     createNewBtn(toDoName, "Delete");
+    createNewBtn(toDoName, "Edit");
+    createNewBtn(toDoName, "Save");
+
   };
   // creates new to-do card using data from stored object within the container.array array
   const appendCardFromArray = (targetCard, sourceObject, container) => {
@@ -260,7 +274,7 @@ const domElementManipulation = () => {
     let prioTitle = prio.querySelector(".prioTemp");
     let prioCont = prio.querySelector(".prioVal");
 
-    title.textContent = "Title: " + sourceObject.toDoTitle;
+    title.textContent = sourceObject.toDoTitle;
 
     descTitle.textContent = "Details: ";
     descCont.textContent = sourceObject.toDoDetails;
@@ -271,6 +285,8 @@ const domElementManipulation = () => {
     date.textContent = "Due date: " + sourceObject.toDoDueDate;
     removeCard(target, sourceObject, container);
     taskStatus(target, sourceObject, container);
+    editToDo(target, sourceObject);
+    saveToDo(target, sourceObject, container);
   };
 
   // removes click target from visible card (deletes dom object) and from array
@@ -280,8 +296,9 @@ const domElementManipulation = () => {
     btn.addEventListener("click", (e) => {
       let child = btn.closest("div");
       content.removeChild(child);
-
       container.array.splice(container.array.indexOf(sourceObject), 1);
+      toDoMap.set(sourceObject.id, container);
+      setToDoStorage();
     });
   };
   // enables task status toggle on card and within array
@@ -295,6 +312,40 @@ const domElementManipulation = () => {
       }
     });
   };
+
+  // edit buttons lets you edit stuff on the card
+  const editToDo = (target, sourceObject) => {
+    let btn = target.querySelector(".Edit")
+    btn.addEventListener("click", (e) => {
+      let parent = btn.closest('div')
+      let descVal = parent.querySelector('.descVal');
+      let titleVal = parent.querySelector('.title');
+      descVal.contentEditable = true;
+      titleVal.contentEditable = true;
+      descVal.style.backgroundColor = "#dddbdb";
+      titleVal.style.backgroundColor = "#dddbdb";
+    })
+  }
+
+// save edit
+  const saveToDo = (target, sourceObject, container) => {
+    let btn = target.querySelector(".Save");
+    btn.addEventListener("click", (e) => {
+      let parent = btn.closest('div')
+      let descVal = parent.querySelector('.descVal');
+      let titleVal = parent.querySelector('.title');
+      descVal.contentEditable = false;
+      titleVal.contentEditable = false;
+      sourceObject.toDoDetails = descVal.textContent;
+      sourceObject.toDoTitle = titleVal.textContent;
+      toDoMap.set(sourceObject.id, container);
+      setToDoStorage();
+
+
+    })
+  }
+
+
   // toggle form visibility - form is invisible with height 0 by default
   const toggleFormVisibility = () => {
     let form = document.querySelector("form");
@@ -376,12 +427,19 @@ const domElementManipulation = () => {
 
 // submit form logic
 function formSubmit(container, sourceObjectID) {
-  console.log(sourceObjectID);
+  console.log("source object ID is " + sourceObjectID);
   console.log(toDoMap.get(sourceObjectID));
 
   let formToDoTitle = document.querySelector("#title");
   let formToDoDesc = document.querySelector("#taskDesc");
+
   let formToDoDate = document.querySelector("#taskDate");
+
+ // converts date to EU date format 
+  let euDate = formToDoDate.value.split('-')
+  euDate = (euDate[2]+ '-' + euDate[1] + '-' + euDate[0]);
+  console.log(euDate);
+
   let formToDoPrioLow = document.querySelector("#prioLow");
   let formToDoPrioMed = document.querySelector("#prioMed");
   let formToDoPrioHigh = document.querySelector("#prioHigh");
@@ -430,12 +488,14 @@ function formSubmit(container, sourceObjectID) {
   let newItem = createNewTodo(
     formToDoTitle.value,
     formToDoDesc.value,
-    formToDoDate.value,
+    euDate,
     formToDoPrio
   );
 
   container.array.push(newItem);
   goDom.renderToDoCards(container);
+  toDoMap.set(sourceObjectID, container);
+  setToDoStorage();
   // createNewCard(newItem, `NewCard${counter}`, container);
 
   formReset(
@@ -459,7 +519,6 @@ const addNewProjectCard = () => {
 
   let btn = document.querySelector(".NewProject");
   btn.addEventListener("click", () => {
-    
     console.log(`counter is at ` + counterP);
     let newProject = prompt("Enter the new project name");
     // if (prompt())
@@ -546,7 +605,7 @@ function backToMainMenu(sourceObjectID, container) {
     toDoMap.set(sourceObjectID, container);
     console.log(toDoMap);
     console.log(toDoMap.get(sourceObjectID).array[0]);
-    setToDoStorage()
+    setToDoStorage();
 
     delContTd();
 
@@ -588,8 +647,6 @@ function renderHomePage(sourceObjectID) {
   let addNewProjectCardHere = addNewProjectCard();
   addNewProjectCardHere;
   goDom.renderProjectCards();
-
-
 }
 
 /// renders the to do page - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -631,84 +688,83 @@ function renderToDoPage(sourceObjectID, holderInput) {
   console.log(taskDate.min.split(`-`)[0]);
 
   console.log(container);
-
-  
 }
 
 // localstorage testing
 
-function checkProjectStorage(){
-  if (localStorage.getItem('ProjectStore') === null){
-    console.log('localStorage is empty')
+function checkProjectStorage() {
+  if (localStorage.getItem("ProjectStore") === null) {
+    console.log("localStorage is empty");
     let testCont = toDoObjects();
-    return projectContainer = testCont;
+    return (projectContainer = testCont);
   } else {
-    let projectcontainer_serializd = localStorage.getItem('ProjectStore');
+    let projectcontainer_serializd = localStorage.getItem("ProjectStore");
     let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
 
-    return projectContainer = projectcontainer_normal;
+    return (projectContainer = projectcontainer_normal);
   }
-};
+}
 
 // // storing projectcontainer in local data
 
-function setContainer(){
+function setContainer() {
   let projectcontainer_serializd = JSON.stringify(projectContainer);
-  localStorage.setItem('ProjectStore', projectcontainer_serializd);
-  console.log(`Proj Container should look like this: ` + projectContainer)
+  localStorage.setItem("ProjectStore", projectcontainer_serializd);
+  console.log(`Proj Container should look like this: ` + projectContainer);
   console.log(localStorage);
   // localStorage.removeItem('1');
-
 }
 
 // function to check if to do items exist
-function checkToDoStorage(){
-  if (localStorage.getItem('ToDoStorage') === null){
-    console.log('localStorage To Do is empty')
+function checkToDoStorage() {
+  if (localStorage.myMap === undefined) {
+    console.log("localStorage To Do is empty");
     let testCont = new Map();
-    return toDoMap = testCont;
+    return (toDoMap = testCont);
   } else {
-    let toDoMap_serializd = localStorage.getItem('ToDoStorage');
-    let toDoMap_normal = JSON.parse(toDoMap_serializd);
-    console.log(toDoMap_normal);
+    let toDoMap_normal;
     toDoMap_normal = new Map(JSON.parse(localStorage.myMap));
-    return toDoMap = toDoMap_normal;
+    return (toDoMap = toDoMap_normal);
   }
 }
 
-//function to save state of current to do projects 
-function setToDoStorage(){
-  let toDoMap_serializd = JSON.stringify(toDoMap);
-  localStorage.setItem('ToDoStorage', toDoMap_serializd);
-  console.log(`To Do Container should look like this: ` + toDoMap)
+//function to save state of current to do projects
+function setToDoStorage() {
   localStorage.myMap = JSON.stringify(Array.from(toDoMap.entries()));
-  console.log(toDoMap_serializd);
-  console.log(localStorage);
-  // localStorage.removeItem('1');
+  console.log("To Do list saved successfully");
 }
 
-// console.log(localStorage);
-// localStorage.removeItem('ProjectStore');
-// localStorage.removeItem('ToDoStorage');
-// console.log(localStorage);
+function deleteToDoStorage() {
+  localStorage.removeItem("myMap");
+  console.log(localStorage);
+}
+
+// for testing purposes / removing stored elements
+// localStorage.removeItem("ProjectStore");
+// localStorage.removeItem("ToDoStorage");
+// localStorage.removeItem("myMap");
+
+
+// sets variables to be used throughout the application for storing the map and project container
 let projectContainer;
 let toDoMap;
 
 // Object.setPrototypeOf(projectContainer, toDoObjects)
 
+// checking storage whether any saved values are present
+// if not present, render new values
 checkToDoStorage();
 checkProjectStorage();
 
-
 // need to include this or nothing works  - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - -
-// let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
-
-// let projectContainer = toDoObjects();
-console.log(projectContainer);
 // renders home page for start of website
 
 renderHomePage();
 
+// date manipulation tryout
 
-
+let newDate = new Date;
+console.log(newDate.getFullYear());
+console.log(newDate.getMonth() + 1);
+console.log(newDate.getDate());
