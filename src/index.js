@@ -91,6 +91,10 @@ const domElementManipulation = () => {
       btn.textContent = "Add a new To Do item!";
     } else if (btnTxt == "home") {
       btn.textContent = "Go back to project list!";
+    }else if (btnTxt == "OpenProject") {
+      btn.textContent = "Open Project";
+    }else if (btnTxt == "DeleteProject") {
+      btn.textContent = "Delete this project";
     }else {
       btn.textContent = btnTxt;
     }
@@ -98,13 +102,7 @@ const domElementManipulation = () => {
     target.appendChild(btn);
   };
 
-  const createNewBtnInsideDiv = (targetAppend, btnTxt) => {
-    let target = targetAppend.querySelector(".buttons")
 
-    let btn = document.createElement("button");
-    btn.classList.add(`${btnTxt}`);
-    target.appendChild(btn);
-  }
 
   // creates a div inside div with additional functionality to create a paragraph within subsequent div
   const createNewDivInsideDiv = (targetDiv, newDivClass) => {
@@ -149,17 +147,20 @@ const domElementManipulation = () => {
     let content = document.querySelector(".content");
 
     btn.addEventListener("click", (e) => {
-      let child = btn.closest("div");
-      content.removeChild(child);
-      console.log(sourceObject.id);
-      toDoMap.delete(sourceObject.id);
-      setToDoStorage();
-      console.log(toDoMap);
-      projectContainer.array.splice(
-        projectContainer.array.indexOf(sourceObject),
-        1
-      );
-      setContainer();
+      if (confirm('Are you sure you want to delete this project and ALL of the To Do items within?') === true) {
+        let child = btn.closest("div");
+        content.removeChild(child);
+        console.log(sourceObject.id);
+        toDoMap.delete(sourceObject.id);
+        setToDoStorage();
+        console.log(toDoMap);
+        projectContainer.array.splice(
+          projectContainer.array.indexOf(sourceObject),
+          1
+        );
+        setContainer();
+      } else {return};
+      
     });
   };
 
@@ -260,7 +261,7 @@ const domElementManipulation = () => {
     createNewParaInsideDiv(toDoName, "date", "dateVal");
    
 
-    createNewDivInsideDiv(toDoName, "buttons");
+
     createNewBtn(toDoName, "Done");
     createNewBtn(toDoName, "Delete");
     createNewBtn(toDoName, "Edit");
@@ -302,11 +303,14 @@ const domElementManipulation = () => {
     let content = document.querySelector(".content");
     let btn = target.querySelector(".Delete");
     btn.addEventListener("click", (e) => {
-      let child = btn.closest("div");
-      content.removeChild(child);
-      container.array.splice(container.array.indexOf(sourceObject), 1);
-      toDoMap.set(sourceObject.id, container);
-      setToDoStorage();
+      if (confirm('Are you sure you want to delete this to do list?') === true) {
+        let child = btn.closest("div");
+        content.removeChild(child);
+        container.array.splice(container.array.indexOf(sourceObject), 1);
+        toDoMap.set(sourceObject.id, container);
+        setToDoStorage();
+      }else{return}
+    
     });
   };
   // enables task status toggle on card and within array
@@ -319,12 +323,21 @@ const domElementManipulation = () => {
         toDoMap.set(sourceObject.id, container);
         setToDoStorage();
 // edit visibility for this shit if when toggled
+        let parent = btn.closest('div');
+        parent.style.backgroundColor = '#FFFFFF';
+        let title = parent.querySelector('h3');
+        title.textContent = `${sourceObject.toDoTitle}`
       } else {
         sourceObject.toDoCompleted = true;
         toDoMap.set(sourceObject.id, container);
         console.log(sourceObject.toDoCompleted);
         setToDoStorage();
 // edit visibility for this shit if when toggled
+        let parent = btn.closest('div');
+        parent.style.backgroundColor = '#A4FF9C';
+        let title = parent.querySelector('h3');
+        title.textContent = `${sourceObject.toDoTitle}`
+        title.textContent = `Task \"${title.textContent}\" completed!`;
       }
     });
   };
@@ -616,7 +629,7 @@ function delCont() {
 function backToMainMenu(sourceObjectID, container) {
   let title = document.querySelector("h1");
 
-  if (title !== "Your active projects") {
+  if (title !== "Your active projects To Do projects") {
     console.log(`source project id is ` + sourceObjectID);
 
     toDoMap.delete(sourceObjectID);
@@ -656,7 +669,7 @@ function setMinMaxDate() {
 
 // renders the home page  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function renderHomePage(sourceObjectID) {
-  goDom.changeTitle("Your active projects");
+  goDom.changeTitle("Your active To Do projects");
   createContentContainer();
   console.log(sourceObjectID);
 
