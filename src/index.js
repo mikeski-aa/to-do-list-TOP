@@ -148,6 +148,7 @@ const domElementManipulation = () => {
         projectContainer.array.indexOf(sourceObject),
         1
       );
+      setContainer()
     });
   };
 
@@ -545,6 +546,7 @@ function backToMainMenu(sourceObjectID, container) {
     toDoMap.set(sourceObjectID, container);
     console.log(toDoMap);
     console.log(toDoMap.get(sourceObjectID).array[0]);
+    setToDoStorage()
 
     delContTd();
 
@@ -635,13 +637,13 @@ function renderToDoPage(sourceObjectID, holderInput) {
 
 // localstorage testing
 
-function checkStorage(){
-  if (localStorage.getItem('1') === null){
+function checkProjectStorage(){
+  if (localStorage.getItem('ProjectStore') === null){
     console.log('localStorage is empty')
     let testCont = toDoObjects();
     return projectContainer = testCont;
   } else {
-    let projectcontainer_serializd = localStorage.getItem('1');
+    let projectcontainer_serializd = localStorage.getItem('ProjectStore');
     let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
 
     return projectContainer = projectcontainer_normal;
@@ -652,35 +654,56 @@ function checkStorage(){
 
 function setContainer(){
   let projectcontainer_serializd = JSON.stringify(projectContainer);
-  localStorage.setItem('1', projectcontainer_serializd);
+  localStorage.setItem('ProjectStore', projectcontainer_serializd);
   console.log(`Proj Container should look like this: ` + projectContainer)
   console.log(localStorage);
   // localStorage.removeItem('1');
 
 }
 
-// function to read local storage
-function getContainer(){
-  let projectcontainer_serializd = localStorage.getItem('1');
-  let projectcontainer_normal = JSON.parse(projectcontainer_serializd);
-  console.log(JSON.parse(projectcontainer_serializd));
-  Object.assign(projectcontainer_normal, toDoContainer());
-  return projectContainer = projectcontainer_normal;
+// function to check if to do items exist
+function checkToDoStorage(){
+  if (localStorage.getItem('ToDoStorage') === null){
+    console.log('localStorage To Do is empty')
+    let testCont = new Map();
+    return toDoMap = testCont;
+  } else {
+    let toDoMap_serializd = localStorage.getItem('ToDoStorage');
+    let toDoMap_normal = JSON.parse(toDoMap_serializd);
+    console.log(toDoMap_normal);
+    toDoMap_normal = new Map(JSON.parse(localStorage.myMap));
+    return toDoMap = toDoMap_normal;
+  }
 }
+
+//function to save state of current to do projects 
+function setToDoStorage(){
+  let toDoMap_serializd = JSON.stringify(toDoMap);
+  localStorage.setItem('ToDoStorage', toDoMap_serializd);
+  console.log(`To Do Container should look like this: ` + toDoMap)
+  localStorage.myMap = JSON.stringify(Array.from(toDoMap.entries()));
+  console.log(toDoMap_serializd);
+  console.log(localStorage);
+  // localStorage.removeItem('1');
+}
+
 // console.log(localStorage);
-// localStorage.removeItem('1');
+// localStorage.removeItem('ProjectStore');
+// localStorage.removeItem('ToDoStorage');
 // console.log(localStorage);
 let projectContainer;
+let toDoMap;
 
 // Object.setPrototypeOf(projectContainer, toDoObjects)
 
-checkStorage();
+checkToDoStorage();
+checkProjectStorage();
 
 
 // need to include this or nothing works  - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - -
 // let projectContainer = toDoObjects();
 let goDom = domElementManipulation();
-const toDoMap = new Map();
+
 // let projectContainer = toDoObjects();
 console.log(projectContainer);
 // renders home page for start of website
