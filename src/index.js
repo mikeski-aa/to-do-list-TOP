@@ -91,18 +91,16 @@ const domElementManipulation = () => {
       btn.textContent = "Add a new To Do item!";
     } else if (btnTxt == "home") {
       btn.textContent = "Go back to project list!";
-    }else if (btnTxt == "OpenProject") {
+    } else if (btnTxt == "OpenProject") {
       btn.textContent = "Open Project";
-    }else if (btnTxt == "DeleteProject") {
+    } else if (btnTxt == "DeleteProject") {
       btn.textContent = "Delete this project";
-    }else {
+    } else {
       btn.textContent = btnTxt;
     }
 
     target.appendChild(btn);
   };
-
-
 
   // creates a div inside div with additional functionality to create a paragraph within subsequent div
   const createNewDivInsideDiv = (targetDiv, newDivClass) => {
@@ -147,7 +145,11 @@ const domElementManipulation = () => {
     let content = document.querySelector(".content");
 
     btn.addEventListener("click", (e) => {
-      if (confirm('Are you sure you want to delete this project and ALL of the To Do items within?') === true) {
+      if (
+        confirm(
+          "Are you sure you want to delete this project and ALL of the To Do items within?"
+        ) === true
+      ) {
         let child = btn.closest("div");
         content.removeChild(child);
         console.log(sourceObject.id);
@@ -159,8 +161,9 @@ const domElementManipulation = () => {
           1
         );
         setContainer();
-      } else {return};
-      
+      } else {
+        return;
+      }
     });
   };
 
@@ -235,9 +238,7 @@ const domElementManipulation = () => {
         " DUE ON: " +
         toDoMap.get(sourceObject.id).array[0].toDoDueDate;
     } else {
-      firstItem.textContent = "To Do item 1" + " DUE ON: " + "Due Date 1";
-      secondItem.textContent = "To Do item 2" + " DUE ON: " + "Due Date 2";
-      thirdItem.textContent = "To Do item 3" + " DUE ON: " + "Due Date 3";
+      firstItem.textContent = "No To Do tasks added to this project yet!";
     }
 
     openProjectCard(target, sourceObject);
@@ -259,14 +260,11 @@ const domElementManipulation = () => {
     createNewDivInsideDiv(toDoName, "date");
     createNewParaInsideDiv(toDoName, "date", "dateTemp");
     createNewParaInsideDiv(toDoName, "date", "dateVal");
-   
-
 
     createNewBtn(toDoName, "Done");
     createNewBtn(toDoName, "Delete");
     createNewBtn(toDoName, "Edit");
     createNewBtn(toDoName, "Save");
-
   };
   // creates new to-do card using data from stored object within the container.array array
   const appendCardFromArray = (targetCard, sourceObject, container) => {
@@ -292,25 +290,53 @@ const domElementManipulation = () => {
 
     dateTitle.textContent = "Due date: ";
     dateCont.textContent = sourceObject.toDoDueDate;
+
     removeCard(target, sourceObject, container);
     taskStatus(target, sourceObject, container);
     editToDo(target, sourceObject);
     saveToDo(target, sourceObject, container);
+
+    // check for completed status, change background if completed
+    if (sourceObject.toDoCompleted === true) {
+      target.style.backgroundColor = "#A4FF9C";
+      let title = target.querySelector("h3");
+      title.textContent = `${sourceObject.toDoTitle}`;
+      title.textContent = `Task \"${title.textContent}\" completed!`;
+    } else {
+      changeColor(sourceObject, target);
+      let title = target.querySelector("h3");
+      title.textContent = `${sourceObject.toDoTitle}`;
+    }
   };
 
+  //function for changing background colour
+  // set colour of background depending on priority
+  const changeColor = (sourceObject, target) => {
+    if (sourceObject.toDoPrio === "HIGH") {
+      target.style.backgroundColor = "#FF9A52";
+    } else if (sourceObject.toDoPrio === "MED") {
+      // edit visibility for this shit if when toggled
+      target.style.backgroundColor = "#FFF766";
+    } else if (sourceObject.toDoPrio === "LOW") {
+      target.style.backgroundColor = "#82C9FF";
+    }
+  };
   // removes click target from visible card (deletes dom object) and from array
   const removeCard = (target, sourceObject, container) => {
     let content = document.querySelector(".content");
     let btn = target.querySelector(".Delete");
     btn.addEventListener("click", (e) => {
-      if (confirm('Are you sure you want to delete this to do list?') === true) {
+      if (
+        confirm("Are you sure you want to delete this to do list?") === true
+      ) {
         let child = btn.closest("div");
         content.removeChild(child);
         container.array.splice(container.array.indexOf(sourceObject), 1);
         toDoMap.set(sourceObject.id, container);
         setToDoStorage();
-      }else{return}
-    
+      } else {
+        return;
+      }
     });
   };
   // enables task status toggle on card and within array
@@ -322,21 +348,24 @@ const domElementManipulation = () => {
         console.log(sourceObject.toDoCompleted);
         toDoMap.set(sourceObject.id, container);
         setToDoStorage();
-// edit visibility for this shit if when toggled
-        let parent = btn.closest('div');
-        parent.style.backgroundColor = '#FFFFFF';
-        let title = parent.querySelector('h3');
-        title.textContent = `${sourceObject.toDoTitle}`
+        // edit visibility for this shit if when toggled
+        let parent = btn.closest("div");
+        //check for source object parent colour
+        // set colour of background depending on priority
+        changeColor(sourceObject, target);
+
+        let title = parent.querySelector("h3");
+        title.textContent = `${sourceObject.toDoTitle}`;
       } else {
         sourceObject.toDoCompleted = true;
         toDoMap.set(sourceObject.id, container);
         console.log(sourceObject.toDoCompleted);
         setToDoStorage();
-// edit visibility for this shit if when toggled
-        let parent = btn.closest('div');
-        parent.style.backgroundColor = '#A4FF9C';
-        let title = parent.querySelector('h3');
-        title.textContent = `${sourceObject.toDoTitle}`
+        // edit visibility for this shit if when toggled
+        let parent = btn.closest("div");
+        parent.style.backgroundColor = "#A4FF9C";
+        let title = parent.querySelector("h3");
+        title.textContent = `${sourceObject.toDoTitle}`;
         title.textContent = `Task \"${title.textContent}\" completed!`;
       }
     });
@@ -344,25 +373,25 @@ const domElementManipulation = () => {
 
   // edit buttons lets you edit stuff on the card
   const editToDo = (target) => {
-    let btn = target.querySelector(".Edit")
+    let btn = target.querySelector(".Edit");
     btn.addEventListener("click", (e) => {
-      let parent = btn.closest('div')
-      let descVal = parent.querySelector('.descVal');
-      let titleVal = parent.querySelector('.title');
+      let parent = btn.closest("div");
+      let descVal = parent.querySelector(".descVal");
+      let titleVal = parent.querySelector(".title");
       descVal.contentEditable = true;
       titleVal.contentEditable = true;
       descVal.style.backgroundColor = "#dddbdb";
       titleVal.style.backgroundColor = "#dddbdb";
-    })
-  }
+    });
+  };
 
-// save edit
+  // save edit
   const saveToDo = (target, sourceObject, container) => {
     let btn = target.querySelector(".Save");
     btn.addEventListener("click", (e) => {
-      let parent = btn.closest('div')
-      let descVal = parent.querySelector('.descVal');
-      let titleVal = parent.querySelector('.title');
+      let parent = btn.closest("div");
+      let descVal = parent.querySelector(".descVal");
+      let titleVal = parent.querySelector(".title");
       descVal.contentEditable = false;
       titleVal.contentEditable = false;
       sourceObject.toDoDetails = descVal.textContent;
@@ -371,11 +400,8 @@ const domElementManipulation = () => {
       titleVal.style.backgroundColor = "#FFFFFF";
       toDoMap.set(sourceObject.id, container);
       setToDoStorage();
-
-
-    })
-  }
-
+    });
+  };
 
   // toggle form visibility - form is invisible with height 0 by default
   const toggleFormVisibility = () => {
@@ -466,9 +492,9 @@ function formSubmit(container, sourceObjectID) {
 
   let formToDoDate = document.querySelector("#taskDate");
 
- // converts date to EU date format 
-  let euDate = formToDoDate.value.split('-')
-  euDate = (euDate[2]+ '-' + euDate[1] + '-' + euDate[0]);
+  // converts date to EU date format
+  let euDate = formToDoDate.value.split("-");
+  euDate = euDate[2] + "-" + euDate[1] + "-" + euDate[0];
   console.log(euDate);
 
   let formToDoPrioLow = document.querySelector("#prioLow");
@@ -508,13 +534,18 @@ function formSubmit(container, sourceObjectID) {
   }
 
   // for setting priority depending on buttons pressed
-  if (formToDoPrioLow === 1) {
+  console.log(formToDoPrioLow);
+  console.log(formToDoPrioMed);
+  console.log(formToDoPrioHigh);
+
+  if (formToDoPrioLow.checked === true) {
     formToDoPrio = "LOW";
-  } else if (formToDoPrioMed === 1) {
+  } else if (formToDoPrioMed.checked === true) {
     formToDoPrio = "MED";
   } else {
     formToDoPrio = "HIGH";
   }
+  console.log(formToDoPrio);
 
   let newItem = createNewTodo(
     formToDoTitle.value,
@@ -775,12 +806,9 @@ function deleteToDoStorage() {
 // localStorage.removeItem("ToDoStorage");
 // localStorage.removeItem("myMap");
 
-
 // sets variables to be used throughout the application for storing the map and project container
 let projectContainer;
 let toDoMap;
-
-// Object.setPrototypeOf(projectContainer, toDoObjects)
 
 // checking storage whether any saved values are present
 // if not present, render new values
@@ -789,13 +817,7 @@ checkProjectStorage();
 
 // need to include this or nothing works  - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - -
 let goDom = domElementManipulation();
+
 // renders home page for start of website
 
 renderHomePage();
-
-// date manipulation tryout
-
-let newDate = new Date;
-console.log(newDate.getFullYear());
-console.log(newDate.getMonth() + 1);
-console.log(newDate.getDate());
