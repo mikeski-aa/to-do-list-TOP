@@ -89,7 +89,9 @@ const domElementManipulation = () => {
     btn.classList.add(`${btnTxt}`);
     if (btnTxt == "add") {
       btn.textContent = "Add a new To Do item!";
-    } else {
+    } else if (btnTxt == "home") {
+      btn.textContent = "Go back to project list!";
+    }else {
       btn.textContent = btnTxt;
     }
 
@@ -254,6 +256,9 @@ const domElementManipulation = () => {
     createNewParaInsideDiv(toDoName, "priority", "prioVal");
 
     createNewDivInsideDiv(toDoName, "date");
+    createNewParaInsideDiv(toDoName, "date", "dateTemp");
+    createNewParaInsideDiv(toDoName, "date", "dateVal");
+   
 
     createNewDivInsideDiv(toDoName, "buttons");
     createNewBtn(toDoName, "Done");
@@ -269,6 +274,8 @@ const domElementManipulation = () => {
     let desc = target.querySelector(".description");
     let prio = target.querySelector(".priority");
     let date = target.querySelector(".date");
+    let dateTitle = date.querySelector(".dateTemp");
+    let dateCont = date.querySelector(".dateVal");
     let descTitle = desc.querySelector(".descTemp");
     let descCont = desc.querySelector(".descVal");
     let prioTitle = prio.querySelector(".prioTemp");
@@ -282,7 +289,8 @@ const domElementManipulation = () => {
     prioTitle.textContent = "Priority: ";
     prioCont.textContent = sourceObject.toDoPrio;
 
-    date.textContent = "Due date: " + sourceObject.toDoDueDate;
+    dateTitle.textContent = "Due date: ";
+    dateCont.textContent = sourceObject.toDoDueDate;
     removeCard(target, sourceObject, container);
     taskStatus(target, sourceObject, container);
     editToDo(target, sourceObject);
