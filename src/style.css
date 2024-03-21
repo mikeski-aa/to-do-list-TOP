@@ -22,6 +22,12 @@ button:hover {
     border: 1px solid white;
 }
 
+.actionButtons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
 header {
     display: flex;
     flex-direction: column;

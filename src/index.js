@@ -96,6 +96,10 @@ const domElementManipulation = () => {
       btn.textContent = "Open Project";
     } else if (btnTxt == "DeleteProject") {
       btn.textContent = "Delete this project";
+    } else if (btnTxt == "sortDesc") {
+      btn.textContent = "Sort prio - High to Low";
+    } else if (btnTxt == "sortAsc") {
+      btn.textContent = "Sort prio - Low to High";
     } else {
       btn.textContent = btnTxt;
     }
@@ -110,6 +114,13 @@ const domElementManipulation = () => {
     newDiv.classList.add(newDivClass);
     target.appendChild(newDiv);
   };
+
+  const crateNewDivInsideHeader = () => {
+    let target = document.querySelector("header");
+    let newDiv = document.createElement("div");
+    newDiv.classList.add("actionButtons");
+    target.appendChild(newDiv)
+  }
   // this should create new paragraph inside div
   const createNewParaInsideDiv = (targetParentDiv, targetDiv, newDivClass) => {
     let targetParent = document.querySelector(`.${targetParentDiv}`);
@@ -468,7 +479,100 @@ const domElementManipulation = () => {
     }
   };
 
+  const submitFormButtonAction = (container, sourceObjectID) => {
+    let submit = document.querySelector("#submitForm");
+    submit.onclick = function (event) {
+      event.preventDefault();
+      formSubmit(container, sourceObjectID);
+    };
+  }
+
+  const submitFormResetAction = () => {
+    let reset = document.querySelector("#resetForm");
+    reset.onclick = function () {
+      formReset();
+    };
+  
+  }
+
+  const goBackHome = (sourceObjectID, container) => {
+    let home = document.querySelector(".home");
+    home.addEventListener("click", () => {
+      backToMainMenu(sourceObjectID, container);
+    });
+  }
+
+  const sortAscAction = (container) => {
+    let home = document.querySelector(".sortAsc");
+    home.addEventListener("click", () => {
+      sortCardsAsc(container);
+    });
+  }
+
+  const sortDescAction = (container) => {
+    let home = document.querySelector(".sortDesc");
+    home.addEventListener("click", () => {
+      sortCardsDesc(container);
+    });
+  }
+
+  const sortCardsAsc = (container) => {
+    console.log(container.array[0].toDoPrio + '    THIS IS MY TEST')
+    let holder= [];
+    for (let x of container.array) {
+      if (x.toDoPrio === 'LOW') {
+        holder.push(x);
+      }
+    }
+  
+    for (let x of container.array) {
+      if (x.toDoPrio === 'MED') {
+        holder.push(x);
+      }
+    }
+  
+    for (let x of container.array) {
+      if (x.toDoPrio === 'HIGH') {
+        holder.push(x);
+      }
+    }
+    container.array = holder;
+    console.log(container);
+    renderToDoCards(container);
+  }
+
+  const sortCardsDesc = (container) => {
+    console.log(container.array[0].toDoPrio + '    THIS IS MY TEST')
+    let holder= [];
+    for (let x of container.array) {
+      if (x.toDoPrio === 'HIGH') {
+        holder.push(x);
+      }
+    }
+  
+    for (let x of container.array) {
+      if (x.toDoPrio === 'MED') {
+        holder.push(x);
+      }
+    }
+  
+    for (let x of container.array) {
+      if (x.toDoPrio === 'LOW') {
+        holder.push(x);
+      }
+    }
+    container.array = holder;
+    console.log(container);
+    renderToDoCards(container);
+  }
+
   return {
+    goBackHome,
+    submitFormResetAction,
+    submitFormButtonAction,
+    crateNewDivInsideHeader,
+    sortAscAction,
+    sortDescAction,
     renderToDoCards,
     appendProjectCard,
     renderProjectCards,
@@ -635,15 +739,13 @@ function delContTd() {
   let body = document.querySelector("body");
   let child = document.querySelector(".content");
   let header = document.querySelector("header");
-  let childbutton = document.querySelector(".home");
-  let addchildbutton = document.querySelector(".add");
+  let actionButtons = document.querySelector(".actionButtons");
   let form = document.querySelector("form");
   form.style.visibility = "hidden";
   form.style.height = "0";
 
   body.removeChild(child);
-  header.removeChild(childbutton);
-  header.removeChild(addchildbutton);
+  header.removeChild(actionButtons)
 }
 
 // function to delete current container
@@ -716,35 +818,39 @@ function renderHomePage(sourceObjectID) {
 function renderToDoPage(sourceObjectID, holderInput) {
   let container = holderInput;
 
-  // let container = toDoObjects();
+  //test here
 
+
+  //test here
   goDom.changeTitle("To Do List");
   createContentContainer();
   console.log(`The current container length is: ${container.array.length}`);
-  goDom.createNewBtn("header", "home");
-  goDom.createNewBtn("header", "add");
+
+  goDom.crateNewDivInsideHeader();
+  goDom.createNewBtn("actionButtons", "home");
+  goDom.createNewBtn("actionButtons", "add");
+  goDom.createNewBtn("actionButtons", "sortDesc");
+  goDom.createNewBtn("actionButtons", "sortAsc");
 
   goDom.renderToDoCards(container);
   goDom.toggleFormVisibility();
 
+  // sort Ascending prio
+  goDom.sortAscAction(container);
+
+  // sort Desc prio
+  goDom.sortDescAction(container);
+
   // go back home
-  let home = document.querySelector(".home");
-  home.addEventListener("click", () => {
-    backToMainMenu(sourceObjectID, container);
-  });
+  goDom.goBackHome(sourceObjectID, container);
 
   // handles submission of form
-  let submit = document.querySelector("#submitForm");
-  submit.onclick = function (event) {
-    event.preventDefault();
-    formSubmit(container, sourceObjectID);
-  };
+
+  goDom.submitFormButtonAction(container, sourceObjectID);
 
   // handles form reset
-  let reset = document.querySelector("#resetForm");
-  reset.onclick = function () {
-    formReset();
-  };
+  goDom.submitFormResetAction();
+
 
   // set current time for today to prevent selection of dates earlier than toady
   setMinMaxDate();
@@ -822,3 +928,7 @@ let goDom = domElementManipulation();
 // renders home page for start of website
 
 renderHomePage();
+
+
+//testing
+
