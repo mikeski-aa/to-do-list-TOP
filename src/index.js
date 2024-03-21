@@ -903,7 +903,7 @@ import "./style.css";
     }
   }
 
-  //function to save state of current to do projects
+  // function to save state of current to do projects
   function setToDoStorage() {
     localStorage.myMap = JSON.stringify(Array.from(toDoMap.entries()));
   }
