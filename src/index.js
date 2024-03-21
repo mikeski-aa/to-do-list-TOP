@@ -1,4 +1,5 @@
 import "./style.css";
+import deleteCard from "./img/deleteCard.svg";
 
 // factory function to create a new to-do object
 
@@ -298,7 +299,7 @@ const domElementManipulation = () => {
 
     // check for completed status, change background if completed
     if (sourceObject.toDoCompleted === true) {
-      target.style.backgroundColor = "#A4FF9C";
+      target.style.borderRightColor = "#A4FF9C";
       let title = target.querySelector("h3");
       title.textContent = `${sourceObject.toDoTitle}`;
       title.textContent = `Task \"${title.textContent}\" completed!`;
@@ -313,12 +314,12 @@ const domElementManipulation = () => {
   // set colour of background depending on priority
   const changeColor = (sourceObject, target) => {
     if (sourceObject.toDoPrio === "HIGH") {
-      target.style.backgroundColor = "#FF9A52";
+      target.style.borderRightColor = "#FF9A52";
     } else if (sourceObject.toDoPrio === "MED") {
       // edit visibility for this shit if when toggled
-      target.style.backgroundColor = "#FFF766";
+      target.style.borderRightColor = "#FFF766";
     } else if (sourceObject.toDoPrio === "LOW") {
-      target.style.backgroundColor = "#82C9FF";
+      target.style.borderRightColor = "#82C9FF";
     }
   };
   // removes click target from visible card (deletes dom object) and from array
@@ -363,7 +364,7 @@ const domElementManipulation = () => {
         setToDoStorage();
         // edit visibility for this shit if when toggled
         let parent = btn.closest("div");
-        parent.style.backgroundColor = "#A4FF9C";
+        parent.style.borderRightColor = "#A4FF9C";
         let title = parent.querySelector("h3");
         title.textContent = `${sourceObject.toDoTitle}`;
         title.textContent = `Task \"${title.textContent}\" completed!`;
