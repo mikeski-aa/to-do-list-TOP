@@ -376,7 +376,7 @@ import "./style.css";
           let title = parent.querySelector("h3");
           title.textContent = `${sourceObject.toDoTitle}`;
           
-          btn.textContent = "Mark done";
+          btn.textContent = "Toggle done";
         } else {
           sourceObject.toDoCompleted = true;
           toDoMap.set(sourceObject.id, container);
@@ -387,7 +387,7 @@ import "./style.css";
           let title = parent.querySelector("h3");
           title.textContent = `${sourceObject.toDoTitle}`;
           title.textContent = `Task \"${title.textContent}\" completed!`;
-          btn.textContent = "Mark undone";
+          btn.textContent = "Toggle done";
         }
       });
     };
