@@ -46,10 +46,15 @@ header {
     justify-content: center;
     align-items: center;
     gap:2rem;
-    background-color: rgb(56, 56, 56);
+    background-color: rgb(44, 44, 44);
     width: 100vw;
     color: white;
     padding-bottom: 1em;
+    border: 0;
+    border-bottom: 15px;
+    border: 5px solid white;
+    border-color: white;
+    border-radius:  0px 0px 55px 55px; 
    
 }
 
@@ -99,13 +104,23 @@ button {
    width: 45%;
    height: 75%;
    margin-right: 10px;
-   background-color: rgba(1, 255, 1, 0.37);
+ 
 }
-
+.OpenProject:hover {
+    background-color: rgba(1, 255, 1, 0.37);
+   
+}
 .DeleteProject {
     width: 45%;
     height: 75%;
     
+ }
+
+ .DeleteProject:hover {
+    border: 0;
+    color: rgba(255, 145, 0, 0.986);
+    background-color: rgb(35, 35 ,35);
+    outline: 1px solid white;
  }
 
  .Delete, .DeleteProject {
@@ -127,6 +142,10 @@ button {
     border-radius: 12px;
     margin-bottom: 0.25rem;
  
+}
+
+.content>[class*='NewProj']>button {
+    
 }
 
 .projectTitle {
@@ -181,7 +200,8 @@ form>input, form>textarea{
     border: 1px solid black;
     padding: 0.5rem;
 }
-#submitForm, #resetForm {
+#submitForm, #resetForm, #hideForm{
+    border: 0;
     border-radius: 12px;
     padding:0.5em;
 }
@@ -247,18 +267,22 @@ hr{
 .description, .priority, .date {
     width: 100%;
     display: flex;
-   justify-content: space-between;
-   border-bottom: 2px dotted grey;
+    justify-content: space-between;
+    border-bottom: 2px dotted grey;
   
 }
 
 .description {
     display: flex;
-   justify-content: space-between;
+    justify-content: space-between;
 }
 
 .descTemp, .prioTemp, .dateTemp {
     font-weight: bold;
+}
+
+.descTemp {
+    margin-right: 12px;
 }
 
 .dateVal {
