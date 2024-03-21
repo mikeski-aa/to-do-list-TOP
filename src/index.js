@@ -43,8 +43,8 @@ import "./style.css";
       // task,
     };
   };
-  // storing objects in an array, all to do lists live within their own project
 
+  // storing objects in an array, all to do lists live within their own project
   const toDoObjects = () => {
     const array = [];
 
@@ -892,6 +892,7 @@ import "./style.css";
 
   // function to check if to do items exist
   function checkToDoStorage() {
+    console.log()
     if (localStorage.myMap === undefined) {
       let testCont = new Map();
       return (toDoMap = testCont);
@@ -908,9 +909,9 @@ import "./style.css";
   }
 
   // for testing purposes / removing stored elements
-  localStorage.removeItem("ProjectStore");
-  localStorage.removeItem("ToDoStorage");
-  localStorage.removeItem("myMap");
+  // localStorage.removeItem("ProjectStore");
+  // localStorage.removeItem("ToDoStorage");
+  // localStorage.removeItem("myMap");
 
   // sets variables to be used throughout the application for storing the map and project container
   let projectContainer;
