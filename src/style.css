@@ -93,7 +93,7 @@ button {
     justify-content: center;
     align-content: space-between;
     min-height: 14vh;
-    max-height: 15vh;
+    max-height: fit-content;
     border-radius: 25px 50px 50px 25px;
     border-right: 21px solid white;
 
