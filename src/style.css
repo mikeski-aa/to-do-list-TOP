@@ -28,6 +28,18 @@ button:hover {
     gap: 1rem;
 }
 
+.actionButtons>button:hover {
+    cursor: pointer;
+    background-color: rgb(35, 35, 35);
+    color: white;
+    border: 0;
+}
+
+.actionButtons>button {
+    border-radius: 50px;
+    
+}
+
 header {
     display: flex;
     flex-direction: column;
@@ -213,7 +225,7 @@ hr{
 }
 [class*='NewCard']>button {
     border-radius: 55px;
-    width: 3rem;
+    width: 4rem;
     height:2rem;
     border: 0;
     font-weight: bold;

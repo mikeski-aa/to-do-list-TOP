@@ -100,7 +100,9 @@ const domElementManipulation = () => {
       btn.textContent = "Sort prio - High to Low";
     } else if (btnTxt == "sortAsc") {
       btn.textContent = "Sort prio - Low to High";
-    } else {
+    } else if (btnTxt == "Done") {
+      btn.textContent = "Mark done";
+    }else {
       btn.textContent = btnTxt;
     }
 
@@ -368,6 +370,7 @@ const domElementManipulation = () => {
 
         let title = parent.querySelector("h3");
         title.textContent = `${sourceObject.toDoTitle}`;
+        btn.textContent = 'Mark undone';
       } else {
         sourceObject.toDoCompleted = true;
         toDoMap.set(sourceObject.id, container);
@@ -379,6 +382,7 @@ const domElementManipulation = () => {
         let title = parent.querySelector("h3");
         title.textContent = `${sourceObject.toDoTitle}`;
         title.textContent = `Task \"${title.textContent}\" completed!`;
+        btn.textContent = 'Mark done';
       }
     });
   };
